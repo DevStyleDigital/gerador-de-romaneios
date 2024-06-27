@@ -1,3 +1,4 @@
+import { CopyId } from "@/components/copy-id";
 import { Pagination } from "@/components/pagination";
 import { Search } from "@/components/search";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -125,6 +126,7 @@ export default async function Page({
 													</DropdownMenuTrigger>
 													<DropdownMenuContent align="end">
 														<DropdownMenuLabel>Actions</DropdownMenuLabel>
+														<CopyId id={cooperative.id} />
 														<DialogTrigger asChild>
 															<DropdownMenuItem>Edit</DropdownMenuItem>
 														</DialogTrigger>

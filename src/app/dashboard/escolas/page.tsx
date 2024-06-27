@@ -122,13 +122,13 @@ export default async function Page({
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
-													<DropdownMenuLabel>Actions</DropdownMenuLabel>
+													<DropdownMenuLabel>Ações</DropdownMenuLabel>
 													<Link href={`/dashboard/escolas/${school.id}`}>
-														<DropdownMenuItem>Edit</DropdownMenuItem>
+														<DropdownMenuItem>Editar</DropdownMenuItem>
 													</Link>
 													<AlertDialogTrigger asChild>
 														<DropdownMenuItem variant="delete">
-															Delete
+															Deletar
 														</DropdownMenuItem>
 													</AlertDialogTrigger>
 												</DropdownMenuContent>

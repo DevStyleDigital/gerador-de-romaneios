@@ -22,7 +22,7 @@ import { handleDataPagination } from "@/services/pagination";
 import { Ellipsis, Landmark } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { CopyId } from "./components/copy-id";
+import { CopyId } from "../../../components/copy-id";
 import { CsvForm } from "./components/csv-form";
 import { DeleteCityHall } from "./components/delete-city-hall";
 
@@ -117,18 +117,18 @@ export default async function Page({
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
-													<DropdownMenuLabel>Actions</DropdownMenuLabel>
+													<DropdownMenuLabel>Ações</DropdownMenuLabel>
 													<CopyId id={cityHall.id} />
 													<DropdownMenuItem asChild>
 														<Link
 															href={`/dashboard/prefeituras/${cityHall.id}`}
 														>
-															Edit
+															Editar
 														</Link>
 													</DropdownMenuItem>
 													<AlertDialogTrigger asChild>
 														<DropdownMenuItem variant="delete">
-															Delete
+															Deletar
 														</DropdownMenuItem>
 													</AlertDialogTrigger>
 												</DropdownMenuContent>

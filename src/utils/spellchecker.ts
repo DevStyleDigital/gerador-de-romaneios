@@ -12,8 +12,6 @@ export function suggest(
 	});
 	const bestMatch = matches[0];
 
-	console.log(bestMatch[1] >= points ? bestMatch[1] : "");
-
 	if (bestMatch[1] >= points) {
 		return [bestMatch[0], bestMatch[2]];
 	}

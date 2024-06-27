@@ -1,5 +1,6 @@
 "use client";
-import { HtmlRequestTemplate, PDFRequests } from "@/assets/template-request";
+import { PDFFoods } from "@/assets/template-foods";
+import { PDFRequests } from "@/assets/template-request";
 import { Form } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -12,7 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { createClient } from "@/services/supabase";
-import type { RequestTypeDetailed } from "@/types/request";
+import type { RequestType, RequestTypeDetailed } from "@/types/request";
 import { cn } from "@/utils/cn";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
@@ -23,15 +24,19 @@ import { useEffect, useRef, useState } from "react";
 import { getSchools } from "../../actions";
 import { useRequests } from "../../contexts/resquests";
 import { HandleRoute } from "../../handle-route";
+import { saveToLocalStorage, LOCAL_STORAGE_REQUEST } from "../../utils/loacal-storage";
 
 const generatePDFs = async (requests: RequestTypeDetailed[]) => {
 	return await pdf(<PDFRequests requests={requests} />)?.toBuffer();
+};
+const generatePDFFoods = async (foods: RequestType["foods"]) => {
+	return await pdf(<PDFFoods foods={foods} />)?.toBuffer();
 };
 
 export const HandleRequest = () => {
 	const supabase = createClient();
 	const { toast } = useToast();
-	const { requests, cooperatives, cityHalls, setLoadingRequests, routes } =
+	const { requests, cooperatives, cityHalls, setLoadingRequests, routes, setRequests, setRoutes } =
 		useRequests();
 	const [open, setOpen] = useState(false);
 	const [date, setDate] = useState<Date>();
@@ -69,9 +74,9 @@ export const HandleRequest = () => {
 
 		const updates: any[] = [];
 
-		const requestsByCooperative = cooperatives
+		const requestsByCooperatives = cooperatives
 			.reduce((acc, cooperative) => {
-				const requestsByCooperative: RequestTypeDetailed[] = [];
+				const requestsByCooperatives: RequestTypeDetailed[] = [];
 				for (const request of requests) {
 					const foods = request.foods.filter(
 						({ cooperativeId }) =>
@@ -118,7 +123,7 @@ export const HandleRequest = () => {
 							}
 						}
 
-						requestsByCooperative.push({
+						requestsByCooperatives.push({
 							foods,
 							cooperative: {
 								id: cooperative.id.toString(),
@@ -149,7 +154,7 @@ export const HandleRequest = () => {
 					}
 				}
 				acc.push(
-					requestsByCooperative.sort(
+					requestsByCooperatives.sort(
 						(a, b) => a.route - b.route + a.school.number - b.school.number,
 					),
 				);
@@ -159,32 +164,92 @@ export const HandleRequest = () => {
 
 		const zip = new JSZip();
 		let finished = 0;
-		setLoading(`Montando PDFs ${finished}/${requestsByCooperative.length + 1}`);
+		setLoading(
+			`Montando PDFs ${finished}/${requestsByCooperatives.length + 1}`,
+		);
+
+		const totalWeights = structuredClone(requests).reduce(
+			(acc, request) => {
+				const cityHallFoods = cityHalls.find(
+					({ id }) => request.cityHallId === id,
+				)?.foods;
+
+				for (const food of request.foods) {
+					const accFoodIndex = acc.findIndex(
+						(item) =>
+							item.cityHallFoodId === food.cityHallFoodId &&
+							item.name === food.name,
+					);
+
+					if (accFoodIndex === -1) {
+						acc.push(food);
+						continue;
+					}
+
+					if (acc[accFoodIndex]!.quantity)
+						acc[accFoodIndex]!.quantity! += food.quantity || 1;
+					else acc[accFoodIndex]!.quantity = food.quantity || 1;
+
+					const weight =
+						cityHallFoods?.find(({ id }) => food.cityHallFoodId === id)
+							?.weight ||
+						food.weight ||
+						1;
+					acc[accFoodIndex]!.weight! = Number(weight);
+				}
+
+				return acc;
+			},
+			[] as RequestType["foods"],
+		);
 
 		const pdfBuffers = await Promise.all(
-			requestsByCooperative.map(async (requests) => {
-				return {
-					name: requests[0].cooperative.name,
-					buffer: await generatePDFs(requests).finally(() => {
-						finished++;
-						setLoading(
-							`Montando PDFs ${finished}/${requestsByCooperative.length + 1}`,
-						);
-					}),
-				};
-			}),
+			requestsByCooperatives
+				.concat({
+					name: "Pesos",
+				} as any)
+				.map(async (requestsByCooperative, i, arr) => {
+					if (arr.length - 1 === i) {
+						return {
+							name: (requestsByCooperative as any).name,
+							buffer: await generatePDFFoods(totalWeights).finally(() => {
+								finished++;
+								setLoading(
+									`Montando PDFs ${finished}/${
+										requestsByCooperatives.length + 1
+									}`,
+								);
+							}),
+						};
+					}
+
+					return {
+						name: requestsByCooperative[0].cooperative.name,
+						buffer: await generatePDFs(requestsByCooperative).finally(() => {
+							finished++;
+							setLoading(
+								`Montando PDFs ${finished}/${
+									requestsByCooperatives.length + 1
+								}`,
+							);
+						}),
+					};
+				}),
 		);
 
 		let finishedZip = 0;
-		setLoading("Gerando .zip");
+		setLoading(`Gerando .zip ${finishedZip}/${pdfBuffers.length}`);
 		for (const pdfBuffer of pdfBuffers) {
 			zip.file(`${pdfBuffer.name}.pdf`, pdfBuffer.buffer);
 			finishedZip++;
+			setLoading(`Gerando .zip ${finishedZip}/${pdfBuffers.length}`);
 		}
 		const zipContent = await zip.generateAsync({ type: "blob" });
 
-		setLoading("Atualizando escolas");
-		const res = await supabase.from("schools").upsert(updates);
+		if (updates.length) {
+			setLoading("Atualizando escolas");
+			await supabase.from("schools").upsert(updates);
+		}
 		saveAs(zipContent, "romaneios.zip");
 	};
 
@@ -234,6 +299,13 @@ export const HandleRequest = () => {
 						await generateAndDownloadZip();
 						setLoading(undefined);
 						setLoadingRequests(false);
+						setRequests([])
+						setRoutes([{
+							requestIds: new Set() as Set<string>,
+							weight: 0
+						}]);
+						saveToLocalStorage(LOCAL_STORAGE_REQUEST, []);
+						setOpen(false);
 					}}
 					action={async () => {
 						return { error: null };
