@@ -111,7 +111,8 @@ export const CSVForm = ({
 					<span>{progress}%</span>
 				) : (
 					<label htmlFor="load-csv">
-						Carregar dados <span className="ml-2 italic">.csv</span> <UploadIcon className="ml-4 w-4 h-4" />
+						Carregar dados <span className="ml-2 italic">.csv</span>{" "}
+						<UploadIcon className="ml-4 w-4 h-4" />
 					</label>
 				)}
 			</Button>

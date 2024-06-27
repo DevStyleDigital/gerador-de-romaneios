@@ -148,7 +148,7 @@ export const FoodCard = ({
 										value={food.type}
 										onValueChange={(value) => {
 											setFoods((prev) => {
-												prev[i].type = value as 'kg';
+												prev[i].type = value as "kg";
 												return [...prev];
 											});
 										}}

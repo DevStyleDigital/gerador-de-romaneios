@@ -3,19 +3,15 @@
 import { createClient } from "@/services/supabase/server";
 import { revalidateTag } from "next/cache";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function trimIfString(str: any) {
 	return typeof str === "string" ? str.trim() : str;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export async function handleCityHalls(formData: any[]) {
 	const supabase = createClient();
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const dataPrepared: any[] = [];
 	for (const formDataItem of formData) {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		const dataPreparedItem = { emblem: "emblem.png" } as any;
 		for (const item of Object.entries(formDataItem)) {
 			const [key, insideKey, id] = item[0].split("-");
@@ -64,10 +60,8 @@ export async function handleCityHalls(formData: any[]) {
 	};
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export async function handleCityHall(formData: FormData | Record<string, any>) {
 	const supabase = createClient();
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const dataPrepared = { emblem: "emblem.png" } as any;
 	for (const item of formData.entries
 		? formData.entries()

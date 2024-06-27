@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input, MaskedInput } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { Cooperative } from "@/types/cooperative";
 import React from "react";
 import { handleCooperative } from "../actions";
-import type { Cooperative } from "@/types/cooperative";
 
 export const HandleCooperative = ({
 	cooperative,

@@ -14,13 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Form } from "@/components/form";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { createClient } from "@/services/supabase/server";
+import type { Cooperative } from "@/types/cooperative";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { handleSchool } from "../actions";
 import { DeleteSchool } from "../components/delete-school";
 import { CityHallSelect } from "./components/city-hall";
 import { Comments } from "./components/comments";
-import type { Cooperative } from "@/types/cooperative";
 
 export default async function Page({ params }: { params: { id: string } }) {
 	const supabase = createClient(["schools", "cityhalls"]);
@@ -31,13 +31,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 			if (!res.data || res.error) return [];
 			return res.data;
 		});
-	const cooperatives = await supabase
+	const cooperatives = (await supabase
 		.from("cooperatives")
 		.select("id, name")
 		.then((res) => {
 			if (!res.data || res.error) return [];
 			return res.data;
-		}) as Cooperative[];
+		})) as Cooperative[];
 
 	const lastTagData = await supabase
 		.from("schools")
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 						return res.data;
 					})
 			: null;
-	const isCreate = params.id  === "adicionar";
+	const isCreate = params.id === "adicionar";
 
 	if (!school && params.id !== "adicionar") redirect("/dashboard/escolas");
 

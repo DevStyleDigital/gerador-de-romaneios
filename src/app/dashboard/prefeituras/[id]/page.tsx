@@ -13,9 +13,7 @@ import { Label } from "@/components/ui/label";
 
 import { EmblemCard } from "@/components/emblem-card";
 import { Form } from "@/components/form";
-import {
-	AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { createClient } from "@/services/supabase/server";
 import { isUrl } from "@/utils/is-url";
 import Link from "next/link";
@@ -48,9 +46,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 						return res.data;
 					})
 			: null;
-	const isCreate = params.id  === "adicionar";
+	const isCreate = params.id === "adicionar";
 
-	if (!cityHall && params.id !== "adicionar") redirect("/dashboard/prefeituras");
+	if (!cityHall && params.id !== "adicionar")
+		redirect("/dashboard/prefeituras");
 
 	return (
 		<div className="flex flex-col sm:gap-4 sm:py-4">

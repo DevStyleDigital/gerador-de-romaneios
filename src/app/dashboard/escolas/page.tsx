@@ -18,6 +18,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import type { CityHall } from "@/types/city-hall";
 import { Ellipsis, SchoolIcon } from "lucide-react";
 import Link from "next/link";
 import { handleDataPagination } from "../../../services/pagination";
@@ -25,7 +26,6 @@ import { CsvForm } from "./components/csv-form";
 import { DeleteSchool } from "./components/delete-school";
 import { DownloadCSV } from "./components/download-csv";
 import { SearchContainer } from "./components/search";
-import type { CityHall } from "@/types/city-hall";
 
 export default async function Page({
 	searchParams,
@@ -52,13 +52,13 @@ export default async function Page({
 		.order("id", { ascending: false })
 		.limit(1);
 	const lastTag = lastTagData.data?.[0]?.id || 0;
-	const cityHalls = await supabase
+	const cityHalls = (await supabase
 		.from("cityhalls")
 		.select("id, name")
 		.then((res) => {
 			if (!res.data || res.error) return [];
 			return res.data;
-		}) as CityHall[];
+		})) as CityHall[];
 
 	return (
 		<Card>
@@ -73,7 +73,9 @@ export default async function Page({
 					</CardTitle>
 					<div className="flex gap-4 flex-wrap items-center justify-center">
 						<Button asChild>
-							<Link href="/dashboard/escolas/adicionar">Cadastrar Nova Escola</Link>
+							<Link href="/dashboard/escolas/adicionar">
+								Cadastrar Nova Escola
+							</Link>
 						</Button>
 						<DownloadCSV />
 						<CsvForm lastTag={lastTag} />

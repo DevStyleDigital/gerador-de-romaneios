@@ -18,10 +18,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { handleDataPagination } from "@/services/pagination";
 import { Ellipsis, Landmark } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { handleDataPagination } from "@/services/pagination";
 import { CopyId } from "./components/copy-id";
 import { CsvForm } from "./components/csv-form";
 import { DeleteCityHall } from "./components/delete-city-hall";
@@ -120,7 +120,9 @@ export default async function Page({
 													<DropdownMenuLabel>Actions</DropdownMenuLabel>
 													<CopyId id={cityHall.id} />
 													<DropdownMenuItem asChild>
-														<Link href={`/dashboard/prefeituras/${cityHall.id}`}>
+														<Link
+															href={`/dashboard/prefeituras/${cityHall.id}`}
+														>
 															Edit
 														</Link>
 													</DropdownMenuItem>

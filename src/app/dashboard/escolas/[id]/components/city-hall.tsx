@@ -7,9 +7,7 @@ export function CityHallSelect({
 	cityHalls,
 	cityHall,
 }: { cityHalls: any[]; cityHall: string }) {
-	const [value, setValue] = React.useState<string | undefined>(
-		cityHall,
-	);
+	const [value, setValue] = React.useState<string | undefined>(cityHall);
 
 	return (
 		<div className="grid gap-1">

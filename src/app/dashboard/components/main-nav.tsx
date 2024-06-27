@@ -62,7 +62,8 @@ export const MainNav = ({ modal = false }) => {
 				<Link
 					className={cn(
 						linkVariants({
-							variant: pathname === "/dashboard/prefeituras" ? "active" : "default",
+							variant:
+								pathname === "/dashboard/prefeituras" ? "active" : "default",
 						}),
 					)}
 					href="/dashboard/prefeituras"
@@ -75,7 +76,8 @@ export const MainNav = ({ modal = false }) => {
 				<Link
 					className={cn(
 						linkVariants({
-							variant: pathname === "/dashboard/fornecedoras" ? "active" : "default",
+							variant:
+								pathname === "/dashboard/fornecedoras" ? "active" : "default",
 						}),
 					)}
 					href="/dashboard/fornecedoras"

@@ -1,6 +1,10 @@
 import { WRatio, extract, ratio } from "fuzzball";
 
-export function suggest(word: string, dictionary: string[], points = 80): [string | undefined, number] {
+export function suggest(
+	word: string,
+	dictionary: string[],
+	points = 80,
+): [string | undefined, number] {
 	const matches = extract(word.toLowerCase(), dictionary, {
 		scorer: WRatio,
 		processor: (item) => item.toLowerCase(),
@@ -8,7 +12,7 @@ export function suggest(word: string, dictionary: string[], points = 80): [strin
 	});
 	const bestMatch = matches[0];
 
-	console.log(bestMatch[1] >= points ? bestMatch[1] : '')
+	console.log(bestMatch[1] >= points ? bestMatch[1] : "");
 
 	if (bestMatch[1] >= points) {
 		return [bestMatch[0], bestMatch[2]];

@@ -3,12 +3,16 @@
 import { createClient } from "@/services/supabase/server";
 import { revalidateTag } from "next/cache";
 
-export async function handleSchools(formData: Record<string, string | number | undefined>[]) {
+export async function handleSchools(
+	formData: Record<string, string | number | undefined>[],
+) {
 	const supabase = createClient();
 	const dataPrepared: Record<string, string | number | undefined>[] = [];
 
 	for (const formDataItem of formData) {
-		let dataPreparedItem: Record<string, string | number | undefined> = { search: "" };
+		let dataPreparedItem: Record<string, string | number | undefined> = {
+			search: "",
+		};
 		for (const item of Object.entries(formDataItem)) {
 			const [key] = item[0].split("-");
 			dataPreparedItem = {
@@ -16,7 +20,8 @@ export async function handleSchools(formData: Record<string, string | number | u
 				[key]: (item[1] as string).toString().length ? item[1] : undefined,
 			};
 		}
-		dataPreparedItem.search = `${dataPreparedItem.id?.toString()
+		dataPreparedItem.search = `${dataPreparedItem.id
+			?.toString()
 			.padStart(4, "0")} ${dataPreparedItem.name} ${dataPreparedItem.phone} ${
 			dataPreparedItem.route
 		} ${dataPreparedItem.address}`;
@@ -43,10 +48,17 @@ export async function handleSchools(formData: Record<string, string | number | u
 	};
 }
 
-export async function handleSchool(formData: FormData | Record<string, string | object | null | number | undefined>) {
+export async function handleSchool(
+	formData:
+		| FormData
+		| Record<string, string | object | null | number | undefined>,
+) {
 	const supabase = createClient();
-	const dataPrepared = {} as Record<string, string | number | null | undefined | object>;
-	for (const item of typeof formData.entries === 'function'
+	const dataPrepared = {} as Record<
+		string,
+		string | number | null | undefined | object
+	>;
+	for (const item of typeof formData.entries === "function"
 		? formData.entries()
 		: Object.entries(formData)) {
 		const [key] = item[0].split("-");
