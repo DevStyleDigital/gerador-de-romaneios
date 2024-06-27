@@ -27,7 +27,7 @@ const linkVariants = cva(
 export const MainNav = ({ modal = false }) => {
 	const pathname = usePathname();
 	const Comp = modal
-		? (props: { children: React.ReactNode }) => <SheetClose {...props} />
+		? (props: { children: React.ReactNode }) => <SheetClose asChild {...props} />
 		: Slot;
 
 	return (

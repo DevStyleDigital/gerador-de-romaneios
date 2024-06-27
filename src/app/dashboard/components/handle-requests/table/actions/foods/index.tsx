@@ -23,6 +23,7 @@ import React, { useEffect } from "react";
 import { useRequests } from "../../../contexts/resquests";
 import { useFood } from "./food-context";
 import { DataTable } from "./table";
+import type { Food } from "@/types/city-hall";
 
 export const Foods = ({
 	request,
@@ -78,8 +79,7 @@ export const Foods = ({
 					{
 						header: "Name",
 						cell: ({ row }) => {
-							const { foodId, setFoodId, foods } = useFood();
-
+							const { foods, food, setFood } = useFood();
 							return (
 								<div className="flex w-[260px] flex-col gap-2">
 									<div className="relative w-full">
@@ -87,8 +87,8 @@ export const Foods = ({
 											type="text"
 											name="csv_name"
 											id="csv_name"
-											readOnly={!!foodId}
-											required={!foodId || foodId === -1}
+											readOnly={food?.id !== -1}
+											required={food?.id === -1}
 											defaultValue={row.original.name}
 											onChange={(ev) => {
 												row.original.name = ev.target.value;
@@ -97,7 +97,7 @@ export const Foods = ({
 												"pr-10",
 												row.original.issue === "food-name" &&
 													"border-yellow-400",
-												!!foodId && "opacity-50 pointer-events-none",
+													food?.id !== -1 && "opacity-50 pointer-events-none",
 											)}
 										/>
 										<AlertTriangleIcon
@@ -110,14 +110,14 @@ export const Foods = ({
 										/>
 									</div>
 									<Combobox
-										data={[{ id: -1, name: "Nenhuma" }, ...foods]}
+										data={foods as Food[]}
 										label="alimento"
 										id="cityhall_id"
 										setValue={(id) => {
-											setFoodId(Number(id));
-											row.original.cityHallFoodId = Number(id);
+											setFood(foods.find((item) => Number(id) === item.id));
+											row.original.cityHallFoodId = Number(id) || null;
 										}}
-										value={foodId?.toString()}
+										value={food?.id?.toString() || ''}
 									/>
 								</div>
 							);
@@ -158,8 +158,7 @@ export const Foods = ({
 					{
 						header: "Valor (R$) & Peso (KG)",
 						cell: ({ row }) => {
-							const { foodId, foods } = useFood();
-							const food = foods.find(({ id }) => foodId === id);
+							const { food } = useFood();
 							return (
 								<div className="grid grid-cols-[32px_1fr] w-[260px] items-center flex-col gap-2">
 									<Label htmlFor="price">R$:</Label>
@@ -172,9 +171,9 @@ export const Foods = ({
 										defaultValue={
 											Number(food?.value || row.original.price) / 100
 										}
-										readOnly={!!food}
+										readOnly={food?.id !== -1}
 										placeholder="Preço do alimento"
-										className={food ? "opacity-50 pointer-events-none" : ""}
+										className={food?.id !== -1 ? "opacity-50 pointer-events-none" : ""}
 										onChange={(ev) => {
 											row.original.price = Number(ev.target.value) * 100;
 										}}
@@ -186,8 +185,8 @@ export const Foods = ({
 										id="weight"
 										required
 										placeholder="Peso do alimento"
-										readOnly={!!food}
-										className={food ? "opacity-50 pointer-events-none" : ""}
+										readOnly={food?.id !== -1}
+										className={food?.id !== -1 ? "opacity-50 pointer-events-none" : ""}
 										value={food?.weight}
 										defaultValue={Number(food?.weight || row.original.weight)}
 										onChange={(ev) => {
@@ -202,8 +201,8 @@ export const Foods = ({
 						header: "Tipo do pacote & Ações",
 						size: 100,
 						cell: ({ row }) => {
-							const { foodId, foods } = useFood();
-							const food = foods.find(({ id }) => foodId === id);
+							const { food } = useFood();
+							
 							const [type, setType] = React.useState<string | undefined>(
 								food?.type || row.original.type || undefined,
 							);
@@ -213,6 +212,7 @@ export const Foods = ({
 										type="single"
 										size="sm"
 										value={type}
+										disabled={food?.id !== -1}
 										onValueChange={(value) => {
 											setType(value);
 											row.original.type = value as "kg";

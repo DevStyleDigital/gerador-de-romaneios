@@ -4,7 +4,7 @@ import type { School } from "./school";
 type RequestFood = {
 	cooperativeId?: string;
 	id: number;
-	cityHallFoodId: Food["id"] | null;
+	cityHallFoodId: Food["id"] | null | string;
 	quantity?: number;
 	name: string | undefined;
 	price: number | undefined;

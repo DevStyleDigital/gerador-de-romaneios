@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/services/supabase/server";
+import { revalidateTag } from "next/cache";
 
 function convertJsonToCsv(items: any[]) {
 	if (items.length === 0) return "";
@@ -64,6 +65,13 @@ export async function getSchool(id: string) {
 
 	if (!data || error) return null;
 	return data;
+}
+
+export async function updateSchoolsComments(updates: any[]) {
+	const supabase = createClient(["schools"]);
+	await supabase.from("schools").upsert(updates);
+	revalidateTag('schools')
+	return true
 }
 
 export async function getCooperative(id: string) {

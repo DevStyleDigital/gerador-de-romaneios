@@ -21,7 +21,7 @@ import JSZip from "jszip";
 import { FileText, LoaderCircle } from "lucide-react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getSchools } from "../../actions";
+import { getSchools, updateSchoolsComments } from "../../actions";
 import { useRequests } from "../../contexts/resquests";
 import { HandleRoute } from "../../handle-route";
 import { saveToLocalStorage, LOCAL_STORAGE_REQUEST } from "../../utils/loacal-storage";
@@ -246,9 +246,10 @@ export const HandleRequest = () => {
 		}
 		const zipContent = await zip.generateAsync({ type: "blob" });
 
+		console.log(updates)
+
 		if (updates.length) {
-			setLoading("Atualizando escolas");
-			await supabase.from("schools").upsert(updates);
+			await updateSchoolsComments(updates)
 		}
 		saveAs(zipContent, "romaneios.zip");
 	};
