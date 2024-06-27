@@ -30,7 +30,7 @@ export default function Page() {
 							} catch (e) {
 								toast({
 									title: "Ops! Encontramos um Erro.",
-									description: e,
+									description: e as any,
 									variant: "destructive",
 								});
 							}
