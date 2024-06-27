@@ -8,6 +8,7 @@ import {
 } from "./components/handle-requests/contexts/resquests";
 import { GenerateRequestsCsvTemplate } from "./components/handle-requests/csv/generate-csv-template";
 import { GetRequestsFromCsv } from "./components/handle-requests/csv/get-data-from-csv";
+import { Infos } from "./components/handle-requests/infos";
 import { Table } from "./components/handle-requests/table";
 
 export default async function Page() {
@@ -31,6 +32,7 @@ export default async function Page() {
 
 	return (
 		<RequestsProvider cityHalls={cityHalls} cooperatives={cooperatives}>
+			<Infos />
 			<Card>
 				<CardHeader className="flex items-center justify-between gap-2">
 					<div className="flex items-center gap-2" />

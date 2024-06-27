@@ -23,12 +23,8 @@ type Data = { id: string; number: number; weight: number; name: string };
 export const columns: ColumnDef<Data>[] = [
 	{
 		accessorKey: "number",
-		header: "#Número",
-		cell: ({ row }) => (
-			<p className="capitalize">
-				#{row.original.number?.toString().padStart(4, "0")}
-			</p>
-		),
+		header: "Número",
+		cell: ({ row }) => <p className="capitalize">{row.original.number}</p>,
 	},
 	{
 		accessorKey: "name",
@@ -37,8 +33,10 @@ export const columns: ColumnDef<Data>[] = [
 	},
 	{
 		accessorKey: "weight",
-		header: "Peso (Kg)",
-		cell: ({ row }) => <p className="uppercase">~ {row.original.weight}</p>,
+		header: "Peso Kg (~)",
+		cell: ({ row }) => (
+			<p className="uppercase w-[80px]">{row.original.weight.toFixed(1)}</p>
+		),
 	},
 ];
 

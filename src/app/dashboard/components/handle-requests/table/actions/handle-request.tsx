@@ -24,20 +24,30 @@ import { useEffect, useRef, useState } from "react";
 import { getSchools, updateSchoolsComments } from "../../actions";
 import { useRequests } from "../../contexts/resquests";
 import { HandleRoute } from "../../handle-route";
-import { saveToLocalStorage, LOCAL_STORAGE_REQUEST } from "../../utils/loacal-storage";
+import {
+	LOCAL_STORAGE_REQUEST,
+	saveToLocalStorage,
+} from "../../utils/loacal-storage";
 
 const generatePDFs = async (requests: RequestTypeDetailed[]) => {
 	return await pdf(<PDFRequests requests={requests} />)?.toBuffer();
 };
-const generatePDFFoods = async (foods: RequestType["foods"]) => {
+const generatePDFFoods = async (foods: RequestType["foods"][]) => {
 	return await pdf(<PDFFoods foods={foods} />)?.toBuffer();
 };
 
 export const HandleRequest = () => {
 	const supabase = createClient();
 	const { toast } = useToast();
-	const { requests, cooperatives, cityHalls, setLoadingRequests, routes, setRequests, setRoutes } =
-		useRequests();
+	const {
+		requests,
+		cooperatives,
+		cityHalls,
+		setLoadingRequests,
+		routes,
+		setRequests,
+		setRoutes,
+	} = useRequests();
 	const [open, setOpen] = useState(false);
 	const [date, setDate] = useState<Date>();
 	const [loading, setLoading] = useState<string | undefined>();
@@ -174,33 +184,38 @@ export const HandleRequest = () => {
 					({ id }) => request.cityHallId === id,
 				)?.foods;
 
-				for (const food of request.foods) {
-					const accFoodIndex = acc.findIndex(
-						(item) =>
-							item.cityHallFoodId === food.cityHallFoodId &&
-							item.name === food.name,
-					);
+				for (let route = 0; route < routes.length; route++) {
+					if (!acc[route]) acc.push([]);
+					if (!routes[route].requestIds.has(request.id)) continue;
 
-					if (accFoodIndex === -1) {
-						acc.push(food);
-						continue;
+					for (const food of request.foods) {
+						const accFoodIndex = acc[route].findIndex(
+							(item) =>
+								item.cityHallFoodId === food.cityHallFoodId &&
+								item.name === food.name,
+						);
+
+						if (accFoodIndex === -1) {
+							acc[route].push(food);
+							continue;
+						}
+
+						if (acc[route][accFoodIndex]!.quantity)
+							acc[route][accFoodIndex]!.quantity! += food.quantity || 1;
+						else acc[route][accFoodIndex]!.quantity = food.quantity || 1;
+
+						const weight =
+							cityHallFoods?.find(({ id }) => food.cityHallFoodId === id)
+								?.weight ||
+							food.weight ||
+							1;
+						acc[route][accFoodIndex]!.weight! = Number(weight);
 					}
-
-					if (acc[accFoodIndex]!.quantity)
-						acc[accFoodIndex]!.quantity! += food.quantity || 1;
-					else acc[accFoodIndex]!.quantity = food.quantity || 1;
-
-					const weight =
-						cityHallFoods?.find(({ id }) => food.cityHallFoodId === id)
-							?.weight ||
-						food.weight ||
-						1;
-					acc[accFoodIndex]!.weight! = Number(weight);
 				}
 
 				return acc;
 			},
-			[] as RequestType["foods"],
+			[] as RequestType["foods"][],
 		);
 
 		const pdfBuffers = await Promise.all(
@@ -246,10 +261,8 @@ export const HandleRequest = () => {
 		}
 		const zipContent = await zip.generateAsync({ type: "blob" });
 
-		console.log(updates)
-
 		if (updates.length) {
-			await updateSchoolsComments(updates)
+			await updateSchoolsComments(updates);
 		}
 		saveAs(zipContent, "romaneios.zip");
 	};
@@ -300,13 +313,13 @@ export const HandleRequest = () => {
 						await generateAndDownloadZip();
 						setLoading(undefined);
 						setLoadingRequests(false);
-						setRequests([])
-						setRoutes([{
-							requestIds: new Set() as Set<string>,
-							weight: 0
-						}]);
-						saveToLocalStorage(LOCAL_STORAGE_REQUEST, []);
-						setOpen(false);
+						// setRequests([])
+						// setRoutes([{
+						// 	requestIds: new Set() as Set<string>,
+						// 	weight: 0
+						// }]);
+						// saveToLocalStorage(LOCAL_STORAGE_REQUEST, []);
+						// setOpen(false);
 					}}
 					action={async () => {
 						return { error: null };

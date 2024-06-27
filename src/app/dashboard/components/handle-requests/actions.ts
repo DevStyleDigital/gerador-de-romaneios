@@ -70,8 +70,8 @@ export async function getSchool(id: string) {
 export async function updateSchoolsComments(updates: any[]) {
 	const supabase = createClient(["schools"]);
 	await supabase.from("schools").upsert(updates);
-	revalidateTag('schools')
-	return true
+	revalidateTag("schools");
+	return true;
 }
 
 export async function getCooperative(id: string) {

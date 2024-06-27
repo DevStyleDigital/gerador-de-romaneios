@@ -15,6 +15,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Food } from "@/types/city-hall";
 import type { RequestType } from "@/types/request";
 import { cn } from "@/utils/cn";
 import { AlertTriangleIcon, Trash } from "lucide-react";
@@ -23,7 +24,6 @@ import React, { useEffect } from "react";
 import { useRequests } from "../../../contexts/resquests";
 import { useFood } from "./food-context";
 import { DataTable } from "./table";
-import type { Food } from "@/types/city-hall";
 
 export const Foods = ({
 	request,
@@ -97,7 +97,7 @@ export const Foods = ({
 												"pr-10",
 												row.original.issue === "food-name" &&
 													"border-yellow-400",
-													food?.id !== -1 && "opacity-50 pointer-events-none",
+												food?.id !== -1 && "opacity-50 pointer-events-none",
 											)}
 										/>
 										<AlertTriangleIcon
@@ -117,7 +117,7 @@ export const Foods = ({
 											setFood(foods.find((item) => Number(id) === item.id));
 											row.original.cityHallFoodId = Number(id) || null;
 										}}
-										value={food?.id?.toString() || ''}
+										value={food?.id?.toString() || ""}
 									/>
 								</div>
 							);
@@ -173,7 +173,9 @@ export const Foods = ({
 										}
 										readOnly={food?.id !== -1}
 										placeholder="Preço do alimento"
-										className={food?.id !== -1 ? "opacity-50 pointer-events-none" : ""}
+										className={
+											food?.id !== -1 ? "opacity-50 pointer-events-none" : ""
+										}
 										onChange={(ev) => {
 											row.original.price = Number(ev.target.value) * 100;
 										}}
@@ -186,7 +188,9 @@ export const Foods = ({
 										required
 										placeholder="Peso do alimento"
 										readOnly={food?.id !== -1}
-										className={food?.id !== -1 ? "opacity-50 pointer-events-none" : ""}
+										className={
+											food?.id !== -1 ? "opacity-50 pointer-events-none" : ""
+										}
 										value={food?.weight}
 										defaultValue={Number(food?.weight || row.original.weight)}
 										onChange={(ev) => {
@@ -202,7 +206,7 @@ export const Foods = ({
 						size: 100,
 						cell: ({ row }) => {
 							const { food } = useFood();
-							
+
 							const [type, setType] = React.useState<string | undefined>(
 								food?.type || row.original.type || undefined,
 							);

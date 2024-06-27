@@ -2,6 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { suggest } from "@/utils/spellchecker";
 import { useRequests } from "../contexts/resquests";
+import {
+	LOCAL_STORAGE_REQUEST,
+	saveToLocalStorage,
+} from "../utils/loacal-storage";
 import { TableActions } from "./actions/table";
 import { DataTable } from "./table";
 
@@ -71,6 +75,7 @@ export const Table = () => {
 											setRequests((prev) => {
 												prev[row.index].issues = [];
 												prev[row.index].status = "success";
+												saveToLocalStorage(LOCAL_STORAGE_REQUEST, prev);
 												return [...prev];
 											})
 										}

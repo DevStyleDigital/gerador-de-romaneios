@@ -90,7 +90,11 @@ export function DataTable({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<FoodProvider key={row.original.id} request={request} defaultFood={structuredClone(row.original)}>
+								<FoodProvider
+									key={row.original.id}
+									request={request}
+									defaultFood={structuredClone(row.original)}
+								>
 									<TableRow
 										data-state={row.getIsSelected() && "selected"}
 										className={getStatusClassName(row.original.issue)}
