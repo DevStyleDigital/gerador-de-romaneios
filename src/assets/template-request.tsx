@@ -168,19 +168,12 @@ export const HtmlRequestTemplate = ({ request }: { request: RequestTypeDetailed 
 
   function getTextBetweenTags(doc: any, id: string) {
     const text = [];
-    let forAll = true;
-    let tagId: string | undefined = undefined;
-
-		if (!doc.content) return [];
+		if (!doc?.content) return [];
 
     for (const item of doc.content) {
-      if (forAll && item.type === "id") forAll = false;
-      if (item.type === "id") tagId = item.attrs.id;
-      if (tagId && tagId !== id) continue;
-
-      if (item.content) {
-        for (const textItem of item.content) {
-          if (textItem.text) text.push(<Text>{textItem.text}</Text>);
+      if (item.type !== 'tag' && item.content || item.type === 'tag' && item?.attrs?.id?.includes(id)) {
+        for (const content of item.content) {
+          text.push(<Text>{content.text || ''}</Text>)
         }
       }
     }
@@ -223,7 +216,7 @@ export const HtmlRequestTemplate = ({ request }: { request: RequestTypeDetailed 
               fontSize: 24,
               margin: "8px auto 12px",
               position: "absolute",
-              top: "75%",
+              top: "40%",
               left: "57%",
               transform: "translate(-50%, -50%)",
             },

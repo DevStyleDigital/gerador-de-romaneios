@@ -14,7 +14,7 @@ import StarterKit from "@tiptap/starter-kit";
 const Tag = (props: any) => {
   return (
     <NodeViewWrapper className="tag">
-      <p className="rich-text-tag" id={props.node.attrs.id}>
+      <p className="rich-text-tag" id={props.node.attrs.id} contentEditable={false}>
         {props.node.attrs.name}
       </p>
       <NodeViewContent className="rich-text-content is-editable" />
@@ -44,7 +44,6 @@ const RichTextEditor = ({
       Node.create({
         name: "tag",
         group: "block",
-        atom: true,
 				content: 'inline*',
         parseHTML() {
           return [{ tag: "tag" }];

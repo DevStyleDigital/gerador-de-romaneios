@@ -1,6 +1,5 @@
-// @ts-nocheck
 "use client";
-import { HtmlRequestTemplate } from "@/assets/template-request";
+import { HtmlRequestTemplate, PDFRequests } from "@/assets/template-request";
 import { Form } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -21,18 +20,12 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HandleRoute } from "../../handle-route";
 import { useRequests } from "../../contexts/resquests";
-import type { RequestType, RequestTypeDetailed } from "@/types/request";
+import type { RequestTypeDetailed } from "@/types/request";
 import { getSchools } from "../../actions";
 import { useToast } from "@/components/ui/use-toast";
 
-const generatePDFs = async (
-  requests: RequestTypeDetailed[]
-): Promise<Buffer> => {
-  return await pdf(
-    <HtmlRequestTemplate
-			requests={requests}
-    />
-  )?.toBuffer();
+const generatePDFs = async (requests: RequestTypeDetailed[]) => {
+  return await pdf(<PDFRequests requests={requests} />)?.toBuffer();
 };
 
 export const HandleRequest = () => {
@@ -43,12 +36,12 @@ export const HandleRequest = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>();
   const [loading, setLoading] = useState<string | undefined>();
-  const requestsErrorValidatorInputRef = useRef(null);
+  const requestsErrorValidatorInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (requestsErrorValidatorInputRef.current) {
       const hasError = requests.some(
-        (request) => request.status !== "success" || request.issue
+        (request) => request.status !== "success" || request.issues.length
       );
 
       if (hasError) {
@@ -62,7 +55,7 @@ export const HandleRequest = () => {
   }, [requests]);
 
   const generateAndDownloadZip = async () => {
-		setLoading('Buscando escolas...');
+    setLoading("Buscando escolas...");
 
     const schoolsIds = requests.map((request) => request.school.id);
     const schools = await getSchools(schoolsIds);
@@ -72,76 +65,87 @@ export const HandleRequest = () => {
         title: "Erro ao gerar zip",
       });
 
-		setLoading('Lendo dados...');
+    setLoading("Lendo dados...");
 
-    const requestsByCooperative = cooperatives.reduce(
-      (acc, cooperative) => {
-				const requestsByCooperative: RequestTypeDetailed[] = [];
-				for (const request of requests) {
-					const foods = request.foods.filter(({ cooperativeId }) => Number(cooperativeId) === Number(cooperative.id));
-					if (foods.length) {
-						const cityHall = cityHalls.find(({ id }) => id === request.cityHallId);
-						if (!cityHall) continue;
-						const school = schools.find(
-							({ id }) => Number(id) === Number(request.id)
-						);
-						if (!school) continue;
+    const requestsByCooperative = cooperatives
+      .reduce((acc, cooperative) => {
+        const requestsByCooperative: RequestTypeDetailed[] = [];
+        for (const request of requests) {
+          const foods = request.foods.filter(
+            ({ cooperativeId }) =>
+              Number(cooperativeId) === Number(cooperative.id)
+          );
+          if (foods.length) {
+            const cityHall = cityHalls.find(
+              ({ id }) => id === request.cityHallId
+            );
+            if (!cityHall) continue;
+            const school = schools.find(
+              ({ id }) => Number(id) === Number(request.id)
+            );
+            if (!school) continue;
 
-						requestsByCooperative.push({
-							foods,
-							cooperative: {
-								emblem: supabase.storage
-									.from("cooperative")
-									.getPublicUrl(`${cooperative.id}/${cooperative.emblem}`).data
-									.publicUrl,
-								cnpj: cooperative.cnpj,
-								name: cooperative.name,
-								phone: cooperative.phone,
-							},
-							cityHall: {
-								cnpj: cityHall.cnpj,
-								emblem: supabase.storage
-									.from("cityhall")
-									.getPublicUrl(`${cityHall.id}/${cityHall.emblem}`).data.publicUrl,
-								name: cityHall.name,
-								phone: cityHall.phone,
-							},
-							date: date.toLocaleDateString("pt-BR", { dateStyle: "long" }),
-							school,
-							route: routes.findIndex(({ requestIds }) => requestIds.has(request.id)) + 1,
-						})
-					}
-				}
-				acc.push(requestsByCooperative);
+            requestsByCooperative.push({
+              foods,
+              cooperative: {
+                id: cooperative.id.toString(),
+                emblem: supabase.storage
+                  .from("cooperative")
+                  .getPublicUrl(`${cooperative.id}/${cooperative.emblem}`).data
+                  .publicUrl,
+                cnpj: cooperative.cnpj,
+                name: cooperative.name,
+                phone: cooperative.phone,
+              },
+              cityHall: {
+                cnpj: cityHall.cnpj,
+                emblem: supabase.storage
+                  .from("cityhall")
+                  .getPublicUrl(`${cityHall.id}/${cityHall.emblem}`).data
+                  .publicUrl,
+                name: cityHall.name,
+                phone: cityHall.phone,
+              },
+              date: date!.toLocaleDateString("pt-BR", { dateStyle: "long" }),
+              school,
+              route:
+                routes.findIndex(({ requestIds }) =>
+                  requestIds.has(request.id)
+                ) + 1,
+            });
+          }
+        }
+        acc.push(
+          requestsByCooperative.sort(
+            (a, b) => a.route - b.route + a.school.number - b.school.number
+          )
+        );
         return acc;
-      }, [] as RequestTypeDetailed[][]
-    );
+      }, [] as RequestTypeDetailed[][])
+      .filter((r) => r.length);
 
     const zip = new JSZip();
     let finished = 0;
-		setLoading(`Montando PDFs ${finished}/${requestsByCooperative.length + 2}`);
+    setLoading(`Montando PDFs ${finished}/${requestsByCooperative.length + 1}`);
 
     const pdfBuffers = await Promise.all(
-    	requestsByCooperative.map(async (requests) => {
-    		return {
-    			name: requests[0].cooperative.name,
-    			buffer: await generatePDFs(requests).finally(
-    				() => {
-    					finished++;
-							setLoading(`Montando PDFs ${finished}/${requestsByCooperative.length + 2}`);
-    				},
-    			),
-    		};
-    	}),
+      requestsByCooperative.map(async (requests) => {
+        return {
+          name: requests[0].cooperative.name,
+          buffer: await generatePDFs(requests).finally(() => {
+            finished++;
+            setLoading(
+              `Montando PDFs ${finished}/${requestsByCooperative.length + 1}`
+            );
+          }),
+        };
+      })
     );
 
     let finishedZip = 0;
-		setLoading("Gerando .zip");
-		for (const pdfBuffer of pdfBuffers) {
-      zip.file(
-        `rota-${pdfBuffer.route} ${pdfBuffer.name}.pdf`,
-        pdfBuffer.buffer
-      );
+    setLoading("Gerando .zip");
+    for (const pdfBuffer of pdfBuffers) {
+      zip.file(`${pdfBuffer.name}.pdf`, pdfBuffer.buffer);
       finishedZip++;
     }
     const zipContent = await zip.generateAsync({ type: "blob" });
@@ -149,15 +153,140 @@ export const HandleRequest = () => {
   };
 
   return requests.length ? (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+
+        if (open === false) {
+          setLoading(undefined);
+          setLoadingRequests(false);
+        }
+      }}
+    >
+      <PDFViewer>
+        <PDFRequests
+          requests={[
+            [
+              {
+                foods: [],
+                cooperative: {
+                  id: "cooperative.id.toString()",
+                  emblem: "bbb",
+                  cnpj: "cooperative.cnpj",
+                  name: "cooperative.name",
+                  phone: "cooperative.phone",
+                },
+                cityHall: {
+                  cnpj: "cityHall.cnpj",
+                  emblem: "aaa",
+                  name: "cityHall.name",
+                  phone: "cityHall.phone",
+                },
+                date: new Date().toLocaleDateString("pt-BR", {
+                  dateStyle: "long",
+                }),
+                school: {
+                  name: "school.name",
+                  address: "sda",
+                  cityhall_id: "cks",
+                  csv_name: "adlk",
+                  id: 2,
+                  number: 3,
+                  phone: "dls",
+                  pos: 2,
+                  search: "fd",
+                  user_id: "ds",
+                  comments: {
+                    type: "doc",
+                    content: [
+                      {
+                        type: "paragraph",
+                        content: [
+                          {
+                            text: "para todas",
+                            type: "text",
+                          },
+                        ],
+                      },
+                      {
+                        type: "paragraph",
+                        content: [
+                          {
+                            text: "para todas 2",
+                            type: "text",
+                          },
+                        ],
+                      },
+                      {
+                        type: "tag",
+                        attrs: {
+                          id: "cooperative-1",
+                          name: "Coopap",
+                        },
+                        content: [
+                          {
+                            text: "para coopap",
+                            type: "text",
+                          },
+                          {
+                            type: "hardBreak",
+                          },
+                          {
+                            text: "para coopap",
+                            type: "text",
+                          },
+                        ],
+                      },
+                      {
+                        type: "tag",
+                        attrs: {
+                          id: "cooperative-2",
+                          name: "Chocolate",
+                        },
+                        content: [
+                          {
+                            text: "para chocolate",
+                            type: "text",
+                          },
+                          {
+                            type: "hardBreak",
+                          },
+                          {
+                            text: "para chocolate",
+                            type: "text",
+                          },
+                        ],
+                      },
+                      {
+                        type: "paragraph",
+                      },
+                      {
+                        type: "paragraph",
+                        content: [
+                          {
+                            text: "não entra em coopap mas entrra em todas",
+                            type: "text",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+                route: 1,
+              } as any,
+            ]  as any,
+          ]}
+        />
+      </PDFViewer>
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
           ev.preventDefault();
-          if (requestsErrorValidatorInputRef.current.checkValidity()) {
+          if (requestsErrorValidatorInputRef.current?.checkValidity()) {
             setOpen(true);
           } else {
-            requestsErrorValidatorInputRef.current.reportValidity();
+            requestsErrorValidatorInputRef.current?.reportValidity();
           }
         }}
         className="relative"
@@ -174,7 +303,7 @@ export const HandleRequest = () => {
       <DialogContent
         className={cn(
           "2xl:max-w-screen-2xl max-w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto",
-          typeof percent === "number" && "pointer-events-none"
+          loading && "pointer-events-none"
         )}
       >
         <Form
@@ -182,6 +311,7 @@ export const HandleRequest = () => {
           onSubmitFinish={async () => {
             setLoadingRequests(true);
             await generateAndDownloadZip();
+            setLoading(undefined);
             setLoadingRequests(false);
           }}
           action={async () => {
@@ -241,13 +371,13 @@ export const HandleRequest = () => {
           <Button
             type="submit"
             form="handle-request"
-            disabled={typeof percent === "number"}
+            disabled={!!loading}
             disabledByForm
             className="w-fit mx-auto"
           >
             {loading ? (
               <>
-                {setLoading}
+                {loading}
                 <LoaderCircle className="size-4 ml-4 animate-spin" />
               </>
             ) : (
@@ -262,27 +392,3 @@ export const HandleRequest = () => {
     </Dialog>
   ) : null;
 };
-
-/*
-<div className="z-[99999999999999] fixed w-screen h-screen top-0 left-0">
-  <PDFViewer className="w-full h-full">
-    <HtmlRequestTemplate
-      cityHallEmblem={supabase.storage.from('cityhall').getPublicUrl(`${requests[0].cityHall.id}/${requests[0].cityHall?.emblem}`).data.publicUrl}
-      cooperativeEmblem={supabase.storage.from('cityhall').getPublicUrl(`${requests[0].cityHall.id}/${requests[0].cityHall?.emblem}`).data.publicUrl}
-      cooperativeName="{cooperative.name}"
-      cooperativePhone="{cooperative.phone}"
-      requestsFoods={requests[0].foods}
-      cityHallCNPJ="{request.cityHall?.cnpj}"
-      cityHallName="{request.cityHall?.name}"
-      cityHallPhone="{request.cityHall?.phone}"
-      cooperativeCNPJ="{cooperative.cnpj}"
-      schoolName={requests[0].name}
-      schoolNumber="{request.number}"
-      schoolAddress="{request.address}"
-      schoolPhone="{request.phone}"
-      route={1}
-      date="{date.toLocaleDateString('pt-BR', { dateStyle: 'long' })}"
-    />
-  </PDFViewer>
-</div>
-*/
