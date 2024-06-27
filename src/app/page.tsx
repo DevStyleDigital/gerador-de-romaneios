@@ -24,7 +24,9 @@ export default function Page() {
 						action={async (formData) => {
 							setIsLoading(true);
 							try {
-								await login(formData);
+								await login(formData).then((r) => {
+									if (r) throw r;
+								});
 							} catch (e) {
 								toast({
 									title: "Ops! Encontramos um Erro.",
