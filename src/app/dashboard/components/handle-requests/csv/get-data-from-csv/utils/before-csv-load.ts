@@ -7,8 +7,8 @@ export async function beforeCSVLoad(
 	cityHalls: RequestsContextProps["cityHalls"],
 ) {
 	const dataFormatted = data.map(
-		({ id, apelido, fornecedora, nome, ...rest }, i) => {
-			if (!id.length || !apelido.length || !fornecedora.length || !nome.length)
+		({ id, fornecedora, apelido, nome, ...rest }, i) => {
+			if (!id?.length || !fornecedora?.length)
 				return null;
 
 			let cityHallId: string | undefined = undefined;

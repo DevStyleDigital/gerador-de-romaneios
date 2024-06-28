@@ -29,7 +29,7 @@ export const GetRequestsFromCsv = () => {
 
 	return (
 		<CSVForm
-			keys={["id", "fornecedora", "apelido", "nome"]}
+			keys={["id", "fornecedora"]}
 			onBeforeCSVLoad={(data) => {
 				return beforeCSVLoad(data, cityHalls);
 			}}

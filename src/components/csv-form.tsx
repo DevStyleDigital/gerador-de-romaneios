@@ -38,7 +38,7 @@ export async function handleCSV(
 		!newData ||
 		!Array.isArray(newData) ||
 		!newData?.length ||
-		!keys.every((key) => dataTest.includes(key))
+		!keys.every((key) => dataTest?.includes(key))
 	) {
 		toast({
 			description:

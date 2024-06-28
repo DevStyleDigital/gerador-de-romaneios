@@ -10,7 +10,7 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 	let totalWeight = 0;
 	let totalValue = 0;
 
-	if (item.school.csv_name !== item.school.default_csv_name) {
+	if (item.school.csv_name && item.school.csv_name !== item.school.default_csv_name) {
 		status = "warning";
 		issues.push("name");
 	}
