@@ -40,7 +40,6 @@ export const CsvForm = ({ lastTag = 0 }: { lastTag?: number }) => {
 						address: item.endereco,
 						pos: item["posicao no pedido"],
 						number: item.numero,
-						route: 0,
 						csv_name: item.apelido,
 						id: lastTag + i + 1,
 						cityhall_id:

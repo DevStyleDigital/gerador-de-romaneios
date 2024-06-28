@@ -31,7 +31,7 @@ export async function handleCSV(
 		toast: (props: Toast) => void;
 	},
 ) {
-	const dataTest = JSON.stringify(Array.isArray(data) ? data[0] : {});
+	const dataTest = Object.keys(Array.isArray(data) ? data[0] : {});
 	const newData = onBeforeCSVLoad ? await onBeforeCSVLoad(data) : data;
 
 	if (
