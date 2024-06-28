@@ -16,7 +16,7 @@ export function RouteWeight({
 }: { weight: number; maxWeight: number }) {
 	const getWeightClass = () => {
 		if (weight > maxWeight + 10) return "text-red-500";
-		if (weight < maxWeight - 10) return "text-white";
+		if (weight < maxWeight - 10) return "";
 		return "text-green-500";
 	};
 

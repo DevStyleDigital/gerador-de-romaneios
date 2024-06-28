@@ -101,7 +101,7 @@ export const Infos = () => {
 					<div className="grid grid-cols-1 gap-2 pt-6 sm:grid-cols-3">
 						{pricesByCooperatives.map((cooperative, i) => (
 							<div key={i.toString()} className="flex flex-col gap-1">
-								<CardTitle className="text-2xl font-bold">
+								<CardTitle className="text-2xl font-bold max-w-[250px] truncate">
 									{cooperative.name}
 								</CardTitle>
 								<CardDescription className="text-lg">
