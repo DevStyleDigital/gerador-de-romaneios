@@ -22,7 +22,8 @@ function convertJsonToCsv(items: any[]) {
 
 export async function generateCSVSchools(formData: FormData) {
 	const id = formData.get("cityhall_id");
-	const cooperative = formData.get("cooperative_id");
+	const cooperativeId = formData.get("cooperative_id");
+	const cooperativeName = formData.get("cooperative_name");
 	const supabase = createClient(["schools"]);
 
 	const { data, error } = await supabase
@@ -43,7 +44,7 @@ export async function generateCSVSchools(formData: FormData) {
 	const csvData = convertJsonToCsv(
 		data.map((school) => ({
 			id: school.id,
-			fornecedora: cooperative,
+			fornecedora: `${cooperativeId} ${cooperativeName || ""}`,
 			apelido: school.csv_name,
 		})),
 	);

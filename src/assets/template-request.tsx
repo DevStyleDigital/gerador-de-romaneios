@@ -166,7 +166,7 @@ export const HtmlRequestTemplate = ({
 		.split(" ");
 
 	function checkLastPage() {
-		const firstPageItems = 20;
+		const firstPageItems = 18;
 		const itemsPerPage = 30;
 		const totalItems = request.foods.length;
 		if (totalItems <= firstPageItems) {
@@ -251,7 +251,7 @@ export const HtmlRequestTemplate = ({
 				<View style={[styles.entityInfoContainer, styles.cityHall]}>
 					<View style={styles.entityInfo}>
 						<Text style={styles.entityInfoTitle}>Prefeitura:</Text>
-						<Text>{request.cityHall.name}</Text>
+						<Text style={{ fontSize: 20 }}>{request.cityHall.name}</Text>
 					</View>
 					<View style={styles.entityInfoFlex}>
 						<View style={styles.entityInfo}>

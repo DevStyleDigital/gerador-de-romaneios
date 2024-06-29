@@ -19,7 +19,6 @@ import { useRequests } from "../contexts/resquests";
 
 export const GenerateRequestsCsvTemplate = () => {
 	const { cityHalls, cooperatives } = useRequests();
-
 	const [open, setOpen] = React.useState(false);
 	const [cityHall, setCityHall] = React.useState<string | undefined>();
 	const [cooperative, setCooperative] = React.useState<string | undefined>();
@@ -82,6 +81,17 @@ export const GenerateRequestsCsvTemplate = () => {
 								label="fornecedora"
 								setValue={setCooperative}
 								value={cooperative}
+							/>
+							<input
+								type="text"
+								hidden
+								id="cooperative_name"
+								name="cooperative_name"
+								value={
+									cooperatives
+										.find(({ id }) => id.toString() === cooperative)
+										?.name?.split(/-|\s|_/g)[0]
+								}
 							/>
 						</div>
 					</div>

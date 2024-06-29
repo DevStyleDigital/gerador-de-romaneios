@@ -10,7 +10,10 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 	let totalWeight = 0;
 	let totalValue = 0;
 
-	if (item.school.csv_name && item.school.csv_name !== item.school.default_csv_name) {
+	if (
+		item.school.csv_name &&
+		item.school.csv_name !== item.school.default_csv_name
+	) {
 		status = "warning";
 		issues.push("name");
 	}
@@ -18,6 +21,8 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 	const dictionaryFoods = item.cityHallFoods.map(({ name }) => name);
 	for (let i = 0; i < item.foods.length; i++) {
 		const food = item.foods[i];
+		food.name = food.name?.trim().replaceAll(/\s{2,}/g, " ") || "";
+
 		const [foodName, index] = suggest(food.name, dictionaryFoods);
 		let issue: null | string = null;
 

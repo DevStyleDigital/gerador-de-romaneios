@@ -49,9 +49,10 @@ export const HandleRoute = () => {
 					<MaxWeight setMaxWeight={setMaxWeight} maxWeight={maxWeight} />
 					<div className="self-center flex justify-center items-center flex-wrap gap-4 max-w-screen-sm">
 						<TabsList className="flex-wrap h-fit">
-							{routes.map((_, index) => (
+							{routes.map((route, index) => (
 								<TabsTrigger key={index.toString()} value={index.toString()}>
-									Rota {(Number(index) + 1).toString().padStart(2, "0")}
+									Rota {(Number(index) + 1).toString().padStart(2, "0")} -{" "}
+									{route.weight.toFixed(2)} Kg
 									{routes.length > 1 && (
 										<Button
 											className="h-fit w-fit p-2 ml-4"
@@ -91,6 +92,7 @@ export const HandleRoute = () => {
 						</Button>
 					</div>
 					<RouteWeight
+						schoolsAmount={routes[Number(currentRoute)].requestIds.size}
 						weight={Number(routes[Number(currentRoute)].weight.toFixed(1))}
 						maxWeight={maxWeight}
 					/>

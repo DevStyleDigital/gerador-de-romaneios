@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/use-toast";
 import type { CityHall } from "@/types/city-hall";
 import type { CSVLoad } from "..";
 import type { RequestsContextProps } from "../../../contexts/resquests";
@@ -8,8 +9,14 @@ export async function beforeCSVLoad(
 ) {
 	const dataFormatted = data.map(
 		({ id, fornecedora, apelido, nome, ...rest }, i) => {
-			if (!id?.length || !fornecedora?.length)
+			if (!id?.length || !fornecedora?.length) {
+				toast({
+					description: `Linha ${i + 1} não possui ID ou fornecedora`,
+					variant: "destructive",
+				});
+
 				return null;
+			}
 
 			let cityHallId: string | undefined = undefined;
 			let cityHallFoods: CityHall["foods"] = [];
@@ -29,7 +36,23 @@ export async function beforeCSVLoad(
 				}
 			}
 
-			if (!cityHallId?.length) return null;
+			if (!cityHallId?.length) {
+				toast({
+					description: `o ID da escola na linha ${i + 1} não possui prefeitura`,
+					variant: "destructive",
+				});
+				return null;
+			}
+			const cooperative = Number(fornecedora.split(" ")[0]);
+			if (Number.isNaN(cooperative)) {
+				toast({
+					description: `Linha ${
+						i + 1
+					} não foi especificado o id da fornecedora. Certifique-se de mandar o id "<id> <nome da fornecedora>"`,
+					variant: "destructive",
+				});
+				return null;
+			}
 
 			return {
 				school: {
@@ -47,7 +70,7 @@ export async function beforeCSVLoad(
 							? {
 									name: key,
 									quantity: Number(value),
-									cooperative: fornecedora,
+									cooperative: cooperative.toString(),
 								}
 							: null,
 					)

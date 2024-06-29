@@ -313,13 +313,15 @@ export const HandleRequest = () => {
 						await generateAndDownloadZip();
 						setLoading(undefined);
 						setLoadingRequests(false);
-						// setRequests([])
-						// setRoutes([{
-						// 	requestIds: new Set() as Set<string>,
-						// 	weight: 0
-						// }]);
-						// saveToLocalStorage(LOCAL_STORAGE_REQUEST, []);
-						// setOpen(false);
+						setRequests([]);
+						setRoutes([
+							{
+								requestIds: new Set() as Set<string>,
+								weight: 0,
+							},
+						]);
+						saveToLocalStorage(LOCAL_STORAGE_REQUEST, []);
+						setOpen(false);
 					}}
 					action={async () => {
 						return { error: null };

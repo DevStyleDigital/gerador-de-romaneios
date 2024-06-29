@@ -4,7 +4,7 @@ import { createClient } from "@/services/supabase/server";
 import { revalidateTag } from "next/cache";
 
 function trimIfString(str: any) {
-	return typeof str === "string" ? str.trim() : str;
+	return typeof str === "string" ? str.trim().replaceAll(/\s{2,}/g, " ") : str;
 }
 
 export async function handleCityHalls(formData: any[]) {

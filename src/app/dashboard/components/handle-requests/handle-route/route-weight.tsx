@@ -13,7 +13,8 @@ import * as React from "react";
 export function RouteWeight({
 	maxWeight,
 	weight,
-}: { weight: number; maxWeight: number }) {
+	schoolsAmount,
+}: { weight: number; maxWeight: number; schoolsAmount: number }) {
 	const getWeightClass = () => {
 		if (weight > maxWeight + 10) return "text-red-500";
 		if (weight < maxWeight - 10) return "";
@@ -23,8 +24,7 @@ export function RouteWeight({
 	const getWeightMessage = () => {
 		if (weight > maxWeight + 10)
 			return "A rota está mais pesada do que o peso definido";
-		if (weight > maxWeight) return "Peso máximo atingido";
-		if (weight === maxWeight) return "Peso máximo atingido";
+		if (weight >= maxWeight) return "Peso máximo atingido";
 		return `Faltam ${(maxWeight - weight).toFixed(1)} kgs para o peso máximo`;
 	};
 
@@ -63,7 +63,7 @@ export function RouteWeight({
 							{weight}
 						</p>
 						<div className="text-[0.70rem] uppercase text-muted-foreground">
-							{getWeightMessage()}
+							Com {schoolsAmount} escolas: {getWeightMessage()}
 						</div>
 					</div>
 				</div>
