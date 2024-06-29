@@ -52,7 +52,7 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 		totalWeight += Number(cityHallFood.weight || 1) * food.quantity;
 		totalValue += Number(cityHallFood.value) * food.quantity;
 
-		if (compareStrings(food.name, cityHallFood.name)) {
+		if (!compareStrings(food.name, cityHallFood.name)) {
 			if (status !== "error") status = "warning";
 			if (!issues.includes("food-name")) issues.push("food-name");
 			issue = "food-name";
