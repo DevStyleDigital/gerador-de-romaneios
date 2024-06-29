@@ -3,6 +3,18 @@ import { suggest } from "@/utils/spellchecker";
 import type { CSVLoad } from "..";
 import { orderFoods } from "./order-data";
 
+function compareStrings(str1: string, str2: string) {
+	const normalizedStr1 = str1.normalize("NFD");
+	const normalizedStr2 = str2.normalize("NFD");
+
+	// biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
+	const strippedStr1 = normalizedStr1.replace(/[\u0300-\u036f]/g, "");
+	// biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
+	const strippedStr2 = normalizedStr2.replace(/[\u0300-\u036f]/g, "");
+
+	return strippedStr1 === strippedStr2;
+}
+
 export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 	let status: RequestType["status"] = "success";
 	const issues: RequestType["issues"] = [];
@@ -47,7 +59,7 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 		totalWeight += Number(cityHallFood.weight || 1) * food.quantity;
 		totalValue += Number(cityHallFood.value) * food.quantity;
 
-		if (food.name !== cityHallFood.name) {
+		if (compareStrings(food.name, cityHallFood.name)) {
 			if (status !== "error") status = "warning";
 			if (!issues.includes("food-name")) issues.push("food-name");
 			issue = "food-name";
