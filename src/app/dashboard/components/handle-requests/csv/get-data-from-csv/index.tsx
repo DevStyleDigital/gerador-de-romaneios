@@ -10,6 +10,7 @@ import {
 import { beforeCSVLoad } from "./utils/before-csv-load";
 import { CsvLoad } from "./utils/csv-load";
 import { orderData } from "./utils/order-data";
+import { toast } from "@/components/ui/use-toast";
 
 export type CSVLoad = {
 	item: Pick<RequestType, "school" | "csvIndex" | "cityHallId" | "id"> & {
@@ -93,6 +94,14 @@ export const GetRequestsFromCsv = () => {
 				const newData = data
 					.filter((_, i) => !dataSelected.includes(i))
 					.filter(Boolean) as RequestType[];
+
+				if (!newData.length) {
+					toast({
+						description: 'Nenhuma escola no csv possui alimentos!',
+						variant: 'destructive'
+					})
+					return;
+				}
 
 				const orderedData = orderData(newRequests.concat(newData));
 				saveToLocalStorage(LOCAL_STORAGE_REQUEST, orderedData);

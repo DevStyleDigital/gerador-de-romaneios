@@ -147,7 +147,11 @@ export const CSVForm = ({
 						.catch(() => null);
 
 					inputFileRef.current.value = "";
-					await handleCSV(data, { ...props, toast, setProgress });
+					try {
+						await handleCSV(data, { ...props, toast, setProgress });
+					} catch (e) {
+						setProgress(undefined);
+					}
 				}}
 			/>
 		</>

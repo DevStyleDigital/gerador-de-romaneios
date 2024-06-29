@@ -66,7 +66,9 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 		});
 	}
 
-	if (totalWeight === 0) return null;
+	if (totalWeight === 0) {
+		return null;
+	}
 
 	return {
 		...item,

@@ -11,7 +11,7 @@ export async function beforeCSVLoad(
 		({ id, fornecedora, apelido, nome, ...rest }, i) => {
 			if (!id?.length || !fornecedora?.length) {
 				toast({
-					description: `Linha ${i + 1} não possui ID ou fornecedora`,
+					description: `Linha ${i + 2} não possui ID ou fornecedora`,
 					variant: "destructive",
 				});
 
@@ -38,7 +38,7 @@ export async function beforeCSVLoad(
 
 			if (!cityHallId?.length) {
 				toast({
-					description: `o ID da escola na linha ${i + 1} não possui prefeitura`,
+					description: `o ID da escola na linha ${i + 2} não possui prefeitura`,
 					variant: "destructive",
 				});
 				return null;
@@ -47,7 +47,7 @@ export async function beforeCSVLoad(
 			if (Number.isNaN(cooperative)) {
 				toast({
 					description: `Linha ${
-						i + 1
+						i + 2
 					} não foi especificado o id da fornecedora. Certifique-se de mandar o id "<id> <nome da fornecedora>"`,
 					variant: "destructive",
 				});
