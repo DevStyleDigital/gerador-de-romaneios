@@ -116,12 +116,12 @@ export const HandleRoute = () => {
 						}}
 						data={requests
 							.filter(({ id }) => filterRequests(id))
-							.sort((a, b) => a.school.number - b.school.number)
+							.sort((a, b) => (a.school.number || 0) - (b.school.number || 0))
 							.map((request) => ({
-								id: request.id,
-								name: request.school.name,
-								number: request.school.number,
-								weight: request.totalWeight,
+								id: request.id!,
+								name: request.school.name!,
+								number: request.school.number!,
+								weight: request.totalWeight!,
 							}))}
 					/>
 				</div>
@@ -140,12 +140,12 @@ export const HandleRoute = () => {
 							.filter(({ id }) => {
 								return routes[Number(currentRoute)].requestIds.has(id);
 							})
-							.sort((a, b) => b.school.number - a.school.number)
+							.sort((a, b) => (a.school.number || 0) - (b.school.number || 0))
 							.map((request) => ({
-								id: request.id,
-								name: request.school.name,
-								number: request.school.number,
-								weight: request.totalWeight,
+								id: request.id!,
+								name: request.school.name!,
+								number: request.school.number!,
+								weight: request.totalWeight!,
 							}))}
 					/>
 				</div>

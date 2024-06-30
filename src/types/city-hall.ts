@@ -1,4 +1,5 @@
 export type Food = {
+	cityHallFoodId: number | string | null;
 	id: number;
 	name: string;
 	type: "kg" | "ud" | "mc";

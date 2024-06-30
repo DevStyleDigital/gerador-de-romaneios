@@ -3,46 +3,90 @@ import type { Food } from "@/types/city-hall";
 import type { RequestType } from "@/types/request";
 import React, { useEffect } from "react";
 import { useRequests } from "../../../contexts/resquests";
+import { TableRow } from "@/components/ui/table";
 
 const FoodContext = React.createContext(
-	{} as {
-		food: Partial<Food> | undefined;
-		setFood: React.Dispatch<React.SetStateAction<Partial<Food> | undefined>>;
-		foods: Partial<Food>[];
-	},
+  {} as {
+    food: Partial<Food> | undefined;
+    setFood: React.Dispatch<React.SetStateAction<Partial<Food> | undefined>>;
+    foods: Partial<Food>[];
+    issue: string | null;
+    setIssue: React.Dispatch<React.SetStateAction<string | null>>
+  }
 );
 export const useFood = () => React.useContext(FoodContext);
 
+const getStatusClassName = (status: string | null) => {
+	switch (status) {
+		case "food-not-exists":
+			return "bg-red-500/20 border-red-500 hover:bg-red-500/40";
+		case "food-name":
+			return "bg-yellow-500/20 border-yellow-500 hover:bg-yellow-500/40";
+		default:
+			return "";
+	}
+};
+
 export const FoodProvider = ({
-	children,
-	defaultFood,
-	request,
+  children,
+  defaultFood,
+  request,
+  ...props
 }: {
-	children: React.ReactNode;
-	defaultFood: RequestType["foods"][number];
-	request: RequestType;
+  children: React.ReactNode;
+  defaultFood: RequestType["foods"][number];
+  request: RequestType;
+  'data-state'?: string | undefined;
 }) => {
-	const { cityHalls } = useRequests();
+  const { cityHalls } = useRequests();
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	const foods = React.useMemo(
-		() =>
-			[{ id: -1, name: "Nenhuma" }].concat(
-				cityHalls.find(({ id }) => id === request.cityHallId)?.foods || [],
-			),
-		[request.cityHallId],
-	);
-	const foodSelected = foods.find(
-		(item) => Number(defaultFood.cityHallFoodId) === item.id,
-	);
+  const selectedFoods =
+    cityHalls
+      .find(({ id }) => id === request.cityHallId)
+      ?.foods?.map(({ cityHallFoodId, ...rest }) => ({
+        ...rest,
+        cityHallFoodId: `${
+          cityHallFoodId?.toString().split("?")[0] || rest.id
+        }?${request.cityHallId}`,
+      })) || [];
 
-	const [food, setFood] = React.useState<Partial<Food> | undefined>(
-		foodSelected,
-	);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const foods = React.useMemo(
+    () =>
+      [
+        {
+          id: selectedFoods.length + 1,
+          name: "Nenhum",
+          cityHallFoodId: 'none',
+        } as any,
+      ].concat(selectedFoods),
+    [request.cityHallId]
+  );
+  const foodSelected = foods.find(
+    (item) =>
+      defaultFood.cityHallFoodId ===
+      item.cityHallFoodId
+  );
 
-	return (
-		<FoodContext.Provider value={{ foods, food, setFood }}>
-			{children}
-		</FoodContext.Provider>
-	);
+  const [food, setFood] = React.useState<Partial<Food> | undefined>(
+    foodSelected
+  );
+  const [issue, setIssue] = React.useState<string | null>(
+    defaultFood.issue
+  );
+
+  useEffect(() => {
+    setIssue(defaultFood.issue);
+  }, [defaultFood.issue])
+
+  return (
+    <FoodContext.Provider value={{ foods, food, setFood, issue, setIssue }}>
+      <TableRow
+        data-state={props['data-state']}
+        className={getStatusClassName(issue)}
+      >
+      {children}
+      </TableRow>
+    </FoodContext.Provider>
+  );
 };

@@ -23,17 +23,6 @@ import { PlusCircle } from "lucide-react";
 import React from "react";
 import { FoodProvider } from "./food-context";
 
-const getStatusClassName = (status: string | null) => {
-	switch (status) {
-		case "food-not-exists":
-			return "bg-red-500/20 border-red-500 hover:bg-red-500/40";
-		case "food-name":
-			return "bg-yellow-500/20 border-yellow-500 hover:bg-yellow-500/40";
-		default:
-			return "";
-	}
-};
-
 interface DataTableProps {
 	columns: ColumnDef<RequestType["foods"][number]>[];
 	data: RequestType["foods"];
@@ -94,20 +83,16 @@ export function DataTable({
 									key={row.original.id}
 									request={request}
 									defaultFood={structuredClone(row.original)}
+									data-state={row.getIsSelected() ? 'selected' : undefined}
 								>
-									<TableRow
-										data-state={row.getIsSelected() && "selected"}
-										className={getStatusClassName(row.original.issue)}
-									>
-										{row.getVisibleCells().map((cell) => (
-											<TableCell key={cell.id}>
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext(),
-												)}
-											</TableCell>
-										))}
-									</TableRow>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext(),
+											)}
+										</TableCell>
+									))}
 								</FoodProvider>
 							))
 						) : (

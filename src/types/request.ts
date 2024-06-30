@@ -20,13 +20,13 @@ export type RequestType = {
 		default_csv_name: string;
 		csv_name: string;
 		name: string;
-		number: number;
+		number?: number;
 	};
 	cityHallId: string;
 	foods: RequestFood[];
 	totalWeight: number;
 	totalValue: number;
-	csvIndex: number;
+	csvIndex?: number;
 	status: "success" | "error" | "warning";
 	issues: string[];
 };

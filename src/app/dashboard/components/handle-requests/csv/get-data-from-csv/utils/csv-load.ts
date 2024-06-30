@@ -60,7 +60,7 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
 
 		foods.push({
 			id: i,
-			cityHallFoodId: cityHallFood.id,
+			cityHallFoodId: `${cityHallFood.id}?${item.cityHallId}`,
 			cooperativeId: food.cooperative,
 			quantity: food.quantity,
 			name: food.name,
