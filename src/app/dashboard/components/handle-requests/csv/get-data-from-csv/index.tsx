@@ -95,7 +95,7 @@ export const GetRequestsFromCsv = () => {
 					.filter((_, i) => !dataSelected.includes(i))
 					.filter(Boolean) as RequestType[];
 
-				if (!newData.length) {
+				if (!newData.length && !newRequests.length) {
 					toast({
 						description: 'Nenhuma escola no csv possui alimentos!',
 						variant: 'destructive'

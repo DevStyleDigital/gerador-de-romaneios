@@ -209,9 +209,9 @@ export const HtmlRequestTemplate = ({
 						<Text>Data de Entrega: {request.date}</Text>
 						<View style={[{ fontSize: 18 }, styles.entityInfoTitle]}>
 							<Text>
-								{firstWord.toUpperCase()} {secondWord.toUpperCase()}
+								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ''}
 							</Text>
-							<Text>{restName.join(" ").toUpperCase()}</Text>
+							<Text>{restName?.join(" ").toUpperCase() || ''}</Text>
 						</View>
 						<Text>Telefone: {request.school.phone || "Não especificado"}</Text>
 						<Text>Endereço: {request.school.address}</Text>

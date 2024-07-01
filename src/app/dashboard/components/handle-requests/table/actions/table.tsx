@@ -74,7 +74,6 @@ const Form = ({
     <form
       onSubmit={(ev) => {
         ev.preventDefault();
-        console.log(currentRequest);
         setRequests((prev) => {
           currentRequest.issues = currentRequest.issues.includes("name")
             ? ["name"]
