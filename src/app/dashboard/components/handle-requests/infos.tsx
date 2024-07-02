@@ -24,46 +24,7 @@ export function getTotalRequestsPrice(requests: RequestType[]) {
 }
 
 export const Infos = () => {
-	const { requests, cooperatives, cityHalls } = useRequests();
-	const pricesByCooperatives = React.useMemo(() => {
-		return cooperatives.reduce(
-			(acc, cooperative) => {
-				let totalPrice = 0;
-				let totalWeight = 0;
-				for (const request of requests) {
-					const foodsOfCooperative = request.foods.filter(
-						({ cooperativeId }) =>
-							Number(cooperativeId) === Number(cooperative.id),
-					);
-
-					for (const item of foodsOfCooperative) {
-						const foodCityHall = cityHalls
-							.find(({ id }) => id === request.cityHallId)
-							?.foods.find((food) => food.id === item.cityHallFoodId);
-						totalPrice += foodCityHall?.value
-							? Number(foodCityHall.value) * (item.quantity || 1)
-							: item.price
-								? item.price * (item.quantity || 1)
-								: 0;
-						totalWeight += foodCityHall?.weight
-							? Number(foodCityHall.weight) * (item.quantity || 1)
-							: item.weight
-								? item.weight * (item.quantity || 1)
-								: 0;
-					}
-				}
-				if (totalPrice || totalWeight) {
-					acc.push({
-						name: cooperative.name,
-						price: totalPrice,
-						weight: totalWeight,
-					});
-				}
-				return acc;
-			},
-			[] as { name: string; price: number; weight: number }[],
-		);
-	}, [requests, cooperatives, cityHalls]);
+	const { requests, pricesByCooperatives } = useRequests();
 
 	return (
 		<Card>

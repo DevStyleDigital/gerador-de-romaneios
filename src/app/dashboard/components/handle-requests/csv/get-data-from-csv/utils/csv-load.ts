@@ -5,7 +5,10 @@ import { orderFoods } from "./order-data";
 
 function compareStrings(str1: string, str2: string) {
 	// biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
-	return str1.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === str2.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+	return (
+		str1.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
+		str2.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+	);
 }
 
 export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {

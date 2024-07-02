@@ -83,7 +83,7 @@ export function DataTable({
 									key={row.original.id}
 									request={request}
 									defaultFood={structuredClone(row.original)}
-									data-state={row.getIsSelected() ? 'selected' : undefined}
+									data-state={row.getIsSelected() ? "selected" : undefined}
 								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id}>

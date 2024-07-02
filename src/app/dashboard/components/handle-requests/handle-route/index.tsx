@@ -140,7 +140,7 @@ export const HandleRoute = () => {
 							.filter(({ id }) => {
 								return routes[Number(currentRoute)].requestIds.has(id);
 							})
-							.sort((a, b) => (a.school.number || 0) - (b.school.number || 0))
+							.sort((a, b) => (b.school.number || 0) - (a.school.number || 0))
 							.map((request) => ({
 								id: request.id!,
 								name: request.school.name!,

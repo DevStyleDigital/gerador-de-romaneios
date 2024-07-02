@@ -209,9 +209,9 @@ export const HtmlRequestTemplate = ({
 						<Text>Data de Entrega: {request.date}</Text>
 						<View style={[{ fontSize: 18 }, styles.entityInfoTitle]}>
 							<Text>
-								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ''}
+								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ""}
 							</Text>
-							<Text>{restName?.join(" ").toUpperCase() || ''}</Text>
+							<Text>{restName?.join(" ").toUpperCase() || ""}</Text>
 						</View>
 						<Text>Telefone: {request.school.phone || "Não especificado"}</Text>
 						<Text>Endereço: {request.school.address}</Text>
@@ -251,7 +251,7 @@ export const HtmlRequestTemplate = ({
 				<View style={[styles.entityInfoContainer, styles.cityHall]}>
 					<View style={styles.entityInfo}>
 						<Text style={styles.entityInfoTitle}>Prefeitura:</Text>
-						<Text style={{ fontSize: 20 }}>{request.cityHall.name}</Text>
+						<Text style={{ fontSize: 18 }}>{request.cityHall.name}</Text>
 					</View>
 					<View style={styles.entityInfoFlex}>
 						<View style={styles.entityInfo}>

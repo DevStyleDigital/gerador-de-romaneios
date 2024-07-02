@@ -14,7 +14,11 @@ export function RouteWeight({
 	maxWeight,
 	weight,
 	schoolsAmount,
-}: { weight: number; maxWeight: number; schoolsAmount: number }) {
+}: {
+	weight: number;
+	maxWeight: number;
+	schoolsAmount: number;
+}) {
 	const getWeightClass = () => {
 		if (weight > maxWeight + 10) return "text-red-500";
 		if (weight < maxWeight - 10) return "";
@@ -25,7 +29,15 @@ export function RouteWeight({
 		if (weight > maxWeight + 10)
 			return "A rota está mais pesada do que o peso definido";
 		if (weight >= maxWeight) return "Peso máximo atingido";
-		return `Faltam ${(maxWeight - weight).toFixed(1)} kgs para o peso máximo`;
+		return (
+			<>
+				Faltam{" "}
+				<span className="text-base font-bold">
+					{(maxWeight - weight).toFixed(1)}
+				</span>{" "}
+				kgs para o peso máximo
+			</>
+		);
 	};
 
 	const getIcon = () => {
@@ -63,7 +75,8 @@ export function RouteWeight({
 							{weight}
 						</p>
 						<div className="text-[0.70rem] uppercase text-muted-foreground">
-							Com {schoolsAmount} escolas: {getWeightMessage()}
+							Com <span className="text-base font-bold">{schoolsAmount}</span>{" "}
+							escolas: {getWeightMessage()}
 						</div>
 					</div>
 				</div>

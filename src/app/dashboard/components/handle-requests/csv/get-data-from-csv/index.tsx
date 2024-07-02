@@ -1,5 +1,6 @@
 "use client";
 import { CSVForm } from "@/components/csv-form";
+import { toast } from "@/components/ui/use-toast";
 import type { CityHall } from "@/types/city-hall";
 import type { RequestType } from "@/types/request";
 import { useRequests } from "../../contexts/resquests";
@@ -10,7 +11,6 @@ import {
 import { beforeCSVLoad } from "./utils/before-csv-load";
 import { CsvLoad } from "./utils/csv-load";
 import { orderData } from "./utils/order-data";
-import { toast } from "@/components/ui/use-toast";
 
 export type CSVLoad = {
 	item: Pick<RequestType, "school" | "csvIndex" | "cityHallId" | "id"> & {
@@ -97,9 +97,9 @@ export const GetRequestsFromCsv = () => {
 
 				if (!newData.length && !newRequests.length) {
 					toast({
-						description: 'Nenhuma escola no csv possui alimentos!',
-						variant: 'destructive'
-					})
+						description: "Nenhuma escola no csv possui alimentos!",
+						variant: "destructive",
+					});
 					return;
 				}
 

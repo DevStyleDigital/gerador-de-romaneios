@@ -17,6 +17,11 @@ export type RequestsContextProps = {
 		schools: { id: number; number: number; name: string; csv_name: string }[];
 	})[];
 	cooperatives: Cooperative[];
+	pricesByCooperatives: {
+		name: string;
+		price: number;
+		weight: number;
+	}[];
 	routes: {
 		weight: number;
 		requestIds: Set<string>;
@@ -46,6 +51,9 @@ export const RequestsProvider = ({
 }) => {
 	const [requests, setRequests] = React.useState<RequestType[]>([]);
 	const [loadingRequests, setLoadingRequests] = React.useState(false);
+	const [pricesByCooperatives, setPricesByCooperatives] = React.useState<
+		{ name: string; price: number; weight: number }[]
+	>([]);
 	const [routes, setRoutes] = React.useState<
 		{
 			weight: number;
@@ -66,6 +74,53 @@ export const RequestsProvider = ({
 			setLoadingRequests(false);
 		}
 	}, []);
+	React.useEffect(() => {
+		setPricesByCooperatives(
+			cooperatives.reduce(
+				(acc, cooperative) => {
+					let totalPrice = 0;
+					let totalWeight = 0;
+					for (const request of requests) {
+						const foodsOfCooperative = request.foods.filter(
+							({ cooperativeId }) =>
+								Number(cooperativeId) === Number(cooperative.id),
+						);
+
+						for (const item of foodsOfCooperative) {
+							const foodCityHall = cityHalls
+								.find(({ id }) => id === request.cityHallId)
+								?.foods?.find(
+									({ id }) =>
+										item.cityHallFoodId === `${id}?${request.cityHallId}`,
+								);
+
+							totalPrice += foodCityHall?.value
+								? Number(foodCityHall.value) * (item.quantity || 1)
+								: item.price
+									? item.price * (item.quantity || 1)
+									: 0;
+							totalWeight += foodCityHall?.weight
+								? Number(foodCityHall.weight) * (item.quantity || 1)
+								: item.weight
+									? item.weight * (item.quantity || 1)
+									: 0;
+						}
+					}
+
+					if (totalPrice || totalWeight) {
+						acc.push({
+							name: cooperative.name,
+							price: totalPrice,
+							weight: totalWeight,
+						});
+					}
+
+					return acc;
+				},
+				[] as { name: string; price: number; weight: number }[],
+			),
+		);
+	}, [requests, cooperatives, cityHalls]);
 
 	const values = React.useMemo(() => {
 		return {
@@ -77,8 +132,16 @@ export const RequestsProvider = ({
 			cooperatives,
 			routes,
 			setRoutes,
+			pricesByCooperatives,
 		};
-	}, [requests, cityHalls, cooperatives, routes, loadingRequests]);
+	}, [
+		requests,
+		cityHalls,
+		cooperatives,
+		routes,
+		loadingRequests,
+		pricesByCooperatives,
+	]);
 
 	return (
 		<RequestsContext.Provider value={values}>
