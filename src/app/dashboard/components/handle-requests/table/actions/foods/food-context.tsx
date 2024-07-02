@@ -5,11 +5,14 @@ import React, { useEffect } from "react";
 import { useRequests } from "../../../contexts/resquests";
 import { TableRow } from "@/components/ui/table";
 
+	
+type FoodRequest = Food & { cityHallFoodId: number | string | null; }
+
 const FoodContext = React.createContext(
   {} as {
-    food: Partial<Food> | undefined;
-    setFood: React.Dispatch<React.SetStateAction<Partial<Food> | undefined>>;
-    foods: Partial<Food>[];
+    food: Partial<FoodRequest> | undefined;
+    setFood: React.Dispatch<React.SetStateAction<Partial<FoodRequest> | undefined>>;
+    foods: Partial<FoodRequest>[];
     issue: string | null;
     setIssue: React.Dispatch<React.SetStateAction<string | null>>
   }
@@ -43,11 +46,9 @@ export const FoodProvider = ({
   const selectedFoods =
     cityHalls
       .find(({ id }) => id === request.cityHallId)
-      ?.foods?.map(({ cityHallFoodId, ...rest }) => ({
+      ?.foods?.map(({ ...rest }) => ({
         ...rest,
-        cityHallFoodId: `${
-          cityHallFoodId?.toString().split("?")[0] || rest.id
-        }?${request.cityHallId}`,
+        cityHallFoodId: `${rest.id}?${request.cityHallId}`,
       })) || [];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
