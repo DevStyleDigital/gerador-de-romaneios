@@ -41,20 +41,33 @@ export const columns: ColumnDef<Data>[] = [
 ];
 
 export function TableSelect({
-	data,
+	data: initialData,
 	onRowClick,
 }: {
 	data: Data[];
 	onRowClick: (data: Data) => void;
 }) {
+	const [data, setData] = React.useState(initialData);
+	const skipPageResetRef = React.useRef<boolean>(false);
+
+	const updateData = (newData: Data[]) => {
+		skipPageResetRef.current = true;
+		setData(newData);
+	};
 	const [pagination, setPagination] = React.useState({
 		pageIndex: 0,
 		pageSize: 5,
 	});
 
+	React.useEffect(() => {
+		updateData(initialData);
+	}, [initialData, updateData]);
+
 	const table = useReactTable({
 		data,
 		columns,
+		autoResetPageIndex: false,
+		autoResetExpanded: false,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		onPaginationChange: setPagination,
