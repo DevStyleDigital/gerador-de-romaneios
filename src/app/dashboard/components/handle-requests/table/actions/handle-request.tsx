@@ -177,6 +177,7 @@ export const HandleRequest = () => {
 							},
 							date: date!.toLocaleDateString("pt-BR", { dateStyle: "long" }),
 							school,
+							totalWeight: request.totalWeight,
 							route:
 								routes.findIndex(({ requestIds }) =>
 									requestIds.has(request.id),
@@ -267,7 +268,7 @@ export const HandleRequest = () => {
 							buffer: arrayToCsv(
 								pricesByCooperatives.map((pbc) => ({
 									fornecedora: pbc.name,
-									"preço (R$)": pbc.price / 100,
+									"preco (R$)": (pbc.price / 100).toLocaleString('pt-BR'),
 									"peso (Kg)": pbc.weight.toFixed(2),
 								})),
 							).finally(() => {

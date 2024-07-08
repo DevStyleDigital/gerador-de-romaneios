@@ -34,6 +34,7 @@ export type RequestType = {
 export type RequestTypeDetailed = {
 	foods: RequestFood[];
 	school: School;
+	totalWeight: number;
 	cityHall: {
 		emblem: string;
 		name: string;

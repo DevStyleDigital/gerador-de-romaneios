@@ -228,7 +228,7 @@ export const HtmlRequestTemplate = ({
 						},
 					]}
 				>
-					ROTA: {request.route.toString().padStart(2, "0")}
+					ROTA {request.route.toString().padStart(2, "0")} - {request.totalWeight.toFixed(2)} Kg
 				</Text>
 				<Text
 					style={[
