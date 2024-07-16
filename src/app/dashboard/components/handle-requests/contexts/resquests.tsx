@@ -100,9 +100,9 @@ export const RequestsProvider = ({
 									? item.price * (item.quantity || 1)
 									: 0;
 							totalWeight += foodCityHall?.weight
-								? Number(foodCityHall.weight) * (item.quantity || 1)
+								? ((Number(foodCityHall.weight) * 100) * (item.quantity || 1))/100
 								: item.weight
-									? item.weight * (item.quantity || 1)
+									? ((item.weight * 100) * (item.quantity || 1))/100
 									: 0;
 						}
 					}

@@ -8,12 +8,32 @@ function formatCSVName(v: string) {
 }
 
 function compareStrings(str1: string, str2: string) {
-  return (
+  const str1Normalize = str1
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
-    str1.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ===
+    .replace(/[\u0300-\u036f()]/g, "")
+    .replace(/\s{,2}/g, " ").split(' ')
+
+  const str2Normalize = str2
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
-    str2.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-  );
+    .replace(/[\u0300-\u036f()]/g, "")
+    .replace(/\s{,2}/g, " ").split(' ')
+
+  let valid = false;
+  if (str1Normalize.length > 0 && str2Normalize.length > 0 && str1Normalize[0] === str2Normalize[0]) {
+    const intersection = str1Normalize.filter(item => str2Normalize.includes(item) && item !== str1Normalize[0]);
+    if (intersection.length >= 2) valid = true
+    else valid = false
+  } else {
+    valid = false
+  }
+
+  return valid;
 }
 
 export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
@@ -61,7 +81,8 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
     totalWeight += Number(cityHallFood.weight || 1) * food.quantity;
     totalValue += Number(cityHallFood.value) * food.quantity;
 
-    if (!compareStrings(food.name, cityHallFood.name)) {
+    const foodNameValidation = compareStrings(food.name, cityHallFood.name);
+    if (!foodNameValidation) {
       if (status !== "error") status = "warning";
       if (!issues.includes("food-name")) issues.push("food-name");
       issue = "food-name";
