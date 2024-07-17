@@ -114,7 +114,7 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
       quantity: food.quantity,
       name: food.name,
       price: undefined,
-      type: undefined,
+      type: cityHallFood.type,
       weight: undefined,
       issue,
     });
