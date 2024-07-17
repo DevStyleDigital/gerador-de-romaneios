@@ -3,7 +3,7 @@ import { WRatio, extract, ratio } from "fuzzball";
 export function suggest(
   word: string,
   dictionary: string[],
-  points = 90
+  points = 80
 ): [string | undefined, number] {
   const matches = extract(
     word
