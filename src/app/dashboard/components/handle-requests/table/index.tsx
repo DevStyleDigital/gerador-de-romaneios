@@ -58,7 +58,7 @@ export const Table = () => {
 					enableColumnFilter: true,
 					cell: ({ row }) => row.original.school.name,
 					filterFn: (row, _, filterValue) => {
-						return !!suggest(filterValue, [row.original.school.name], 87)[0];
+						return !!(suggest(filterValue, [row.original.school.name], 87)[0] || [undefined, -1])[0];
 					},
 				},
 				{

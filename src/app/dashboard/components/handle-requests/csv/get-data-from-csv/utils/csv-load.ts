@@ -4,33 +4,43 @@ import type { CSVLoad } from "..";
 import { orderFoods } from "./order-data";
 
 function formatCSVName(v: string) {
-  return v.trim().replaceAll(/\s{2,}/g, " ");
+  return v
+    .replaceAll(/\s{2,}/g, " ")
+    .trim();
 }
 
 function compareStrings(str1: string, str2: string) {
   const str1Normalize = str1
     .toLowerCase()
-    .trim()
     .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
     .replace(/[\u0300-\u036f()]/g, "")
-    .replace(/\s{2,}/g, " ").split(' ')
+    .replace(/\s{2,}/g, " ")
+    .trim()
+    .split(" ");
 
   const str2Normalize = str2
     .toLowerCase()
-    .trim()
     .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
     .replace(/[\u0300-\u036f()]/g, "")
-    .replace(/\s{2,}/g, " ").split(' ')
+    .replace(/\s{2,}/g, " ")
+    .trim()
+    .split(" ");
 
   let valid = false;
-  if (str1Normalize.length > 0 && str2Normalize.length > 0 && str1Normalize[0] === str2Normalize[0]) {
-    const intersection = str1Normalize.filter(item => str2Normalize.includes(item) && item !== str1Normalize[0]);
-    if (intersection.length >= 2) valid = true
-    else valid = false
+  if (
+    str1Normalize.length > 0 &&
+    str2Normalize.length > 0 &&
+    str2Normalize[0].includes(str1Normalize[0])
+  ) {
+    const intersection = str1Normalize.filter((item) =>
+      str2Normalize.includes(item)
+    );
+    if (intersection.length >= 1) valid = true;
+    else valid = false;
   } else {
-    valid = false
+    valid = false;
   }
 
   return valid;
@@ -55,9 +65,18 @@ export async function CsvLoad({ item }: CSVLoad): Promise<RequestType | null> {
   const dictionaryFoods = item.cityHallFoods.map(({ name }) => name);
   for (let i = 0; i < item.foods.length; i++) {
     const food = item.foods[i];
-    food.name = food.name ? formatCSVName(food.name) : "";
+    food.name = food.name ? food.name : "";
+    const newName = formatCSVName(food.name).replaceAll(/\(.*\)/g, "");
 
-    const [foodName, index] = suggest(food.name, dictionaryFoods);
+    const [foodName, index] = suggest(
+      newName,
+      dictionaryFoods
+    ).filter((bestMatch) => {
+      return bestMatch[0]?.length
+        ? compareStrings(newName, bestMatch[0])
+        : false;
+    })[0] || [undefined, -1];
+
     let issue: null | string = null;
 
     if (!foodName) {
