@@ -137,6 +137,8 @@ export const FoodCard = ({
 												});
 											}}
 											required
+											min={0.01}
+											step={0.01}
 											type="number"
 											placeholder="Peso"
 										/>
