@@ -14,7 +14,7 @@ function compareStrings(str1: string, str2: string) {
     .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
     .replace(/[\u0300-\u036f()]/g, "")
-    .replace(/\s{,2}/g, " ").split(' ')
+    .replace(/\s{2,}/g, " ").split(' ')
 
   const str2Normalize = str2
     .toLowerCase()
@@ -22,7 +22,7 @@ function compareStrings(str1: string, str2: string) {
     .normalize("NFD")
     // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
     .replace(/[\u0300-\u036f()]/g, "")
-    .replace(/\s{,2}/g, " ").split(' ')
+    .replace(/\s{2,}/g, " ").split(' ')
 
   let valid = false;
   if (str1Normalize.length > 0 && str2Normalize.length > 0 && str1Normalize[0] === str2Normalize[0]) {
