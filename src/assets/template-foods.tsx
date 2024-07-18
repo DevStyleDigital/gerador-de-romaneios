@@ -78,7 +78,7 @@ export const PDFFoods = ({
                 flexWrap: "wrap",
               }}
             >
-              {foods.schools.map((school) => (
+              {foods.schools.sort((a, b) => (a.number || 0) - (b.number || 0)).map((school) => (
                 <View key={school.number}>
                   <Text>Nº {school.number} - </Text>
                   <Text>{school.total.toFixed(2)} Kg</Text>
