@@ -11,6 +11,8 @@ const styles = {
 		position: "relative",
 	} as Styles,
 	row: {
+		display: "flex",
+		flexDirection: "row",
 		gap: 4,
 		borderBottom: "1px solid rgb(0,0,0,0.3)",
 		padding: "8px 4px",
@@ -61,7 +63,7 @@ export const PDFFoods = ({
 						return (
 							<View key={school.number}>
 								<Text>
-									Nº {school.number} - {school.total.toFixed(2)} Kg
+									| Nº {school.number} - {school.total.toFixed(2)} Kg |
 								</Text>
 							</View>
 						);
