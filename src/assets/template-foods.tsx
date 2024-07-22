@@ -6,7 +6,7 @@ const styles = {
 		backgroundColor: "#fff",
 		color: "rgba(0, 0, 0, 0.6)",
 		padding: 24,
-		fontSize: "16px",
+		fontSize: "14px",
 		fontWeight: "normal",
 		position: "relative",
 	} as Styles,
