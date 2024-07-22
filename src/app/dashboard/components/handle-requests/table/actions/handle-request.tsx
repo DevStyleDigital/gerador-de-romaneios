@@ -36,6 +36,7 @@ const generatePDFFoods = async (
   foods: {
     foods: RequestType["foods"];
     schools: {
+      cityHall?: string;
       number?: number;
       total: number;
     }[];
@@ -210,9 +211,10 @@ export const HandleRequest = () => {
 
     const totalWeights = structuredClone(requests).reduce(
       (acc, request) => {
-        const cityHallFoods = cityHalls.find(
+        const city = cityHalls.find(
           ({ id }) => request.cityHallId === id
-        )?.foods;
+        )
+        const cityHallFoods = city?.foods;
 
         for (let route = 0; route < routes.length; route++) {
           if (!acc[route])
@@ -222,6 +224,7 @@ export const HandleRequest = () => {
             });
           if (!routes[route].requestIds.has(request.id)) continue;
           acc[route].schools.push({
+            cityHall: city?.name,
             number: request.school.number,
             total: request.totalWeight,
           })
@@ -259,6 +262,7 @@ export const HandleRequest = () => {
       [] as {
         foods: RequestType["foods"];
         schools: {
+          cityHall?: string;
           number?: number;
           total: number;
         }[];
