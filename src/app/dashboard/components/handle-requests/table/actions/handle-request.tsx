@@ -434,9 +434,9 @@ export const HandleRequest = () => {
                   onSelect={setDate}
                   initialFocus
                   required
-                  disabled={(date) =>
-                    date < new Date(Date.now() - 24 * 60 * 60 * 1000)
-                  } // now - 1 day
+                  // disabled={(date) =>
+                  //   date < new Date(Date.now() - 24 * 60 * 60 * 1000)
+                  // } // now - 1 day
                   form="handle-request"
                 />
               </PopoverContent>
