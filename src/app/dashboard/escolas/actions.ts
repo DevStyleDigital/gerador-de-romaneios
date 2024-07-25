@@ -127,6 +127,6 @@ export async function deleteSchool(id: string) {
 	return {
 		error: null,
 		message: "Escola deletada com sucesso!",
-		push: "/dashboard/escolas",
+		// push: "/dashboard/escolas",
 	};
 }

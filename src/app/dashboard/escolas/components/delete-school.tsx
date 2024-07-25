@@ -27,6 +27,7 @@ export const DeleteSchool = ({
 	const handleDelete = async () => {
 		const res = await deleteSchool(id);
 		setIsDialogOpen(false);
+		console.log(searchParams.toString())
 		router.push(`/dashboard/escolas?${searchParams.toString()}`);
 		return res;
 	};

@@ -118,7 +118,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 									<CardContent>
 										<div className="grid gap-3">
 											<CityHallSelect
-												cityHall={school.cityhall_id}
+												cityHall={school?.cityhall_id}
 												cityHalls={cityHalls}
 											/>
 											<div className="grid md:grid-cols-2 gap-2">
@@ -213,7 +213,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 									</CardHeader>
 									<CardContent>
 										<Comments
-											comments={school.comments}
+											comments={school?.comments}
 											cooperatives={cooperatives}
 										/>
 									</CardContent>
