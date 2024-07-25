@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { deleteSchool } from "../actions";
 
@@ -22,11 +22,12 @@ export const DeleteSchool = ({
 }: { id: string; children: React.ReactNode }) => {
 	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const router = useRouter();
+	const searchParams = useSearchParams();
 
 	const handleDelete = async () => {
 		const res = await deleteSchool(id);
 		setIsDialogOpen(false);
-		router.push("/dashboard/escolas");
+		router.push(`/dashboard/escolas?${searchParams.toString()}`);
 		return res;
 	};
 
