@@ -19,13 +19,14 @@ import { deleteSchool } from "../actions";
 export const DeleteSchool = ({
 	id,
 	children,
-}: { id: string; children: React.ReactNode }) => {
+	cityHall
+}: { id: string; children: React.ReactNode, cityHall?: string }) => {
 	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
 	const handleDelete = async () => {
-		const res = await deleteSchool(id);
+		const res = await deleteSchool(id, cityHall);
 		setIsDialogOpen(false);
 		console.log(searchParams.toString())
 		router.push(`/dashboard/escolas?${searchParams.toString()}`);

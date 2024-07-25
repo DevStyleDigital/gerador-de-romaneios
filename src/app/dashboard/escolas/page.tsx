@@ -81,7 +81,14 @@ export default async function Page({
 						<CsvForm lastTag={lastTag} />
 					</div>
 				</div>
-				<SearchContainer cityHalls={cityHalls} />
+				<div className="flex items-end justify-between w-full">
+					<SearchContainer cityHalls={cityHalls} />
+					{!!searchParams.prefeitura?.length && (
+						<DeleteSchool id="all" cityHall={searchParams.prefeitura}>
+							<Button variant="destructive">Deletar Escolas</Button>
+						</DeleteSchool>
+					)}
+				</div>
 			</CardHeader>
 			<CardContent className="p-0">
 				<div className="border-t border-gray-200">

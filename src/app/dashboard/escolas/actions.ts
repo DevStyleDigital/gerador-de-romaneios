@@ -109,10 +109,13 @@ export async function handleSchool(
 	};
 }
 
-export async function deleteSchool(id: string) {
+export async function deleteSchool(id: string, cityHall?: string) {
 	const supabase = createClient();
 
-	const { error } = await supabase.from("schools").delete().eq("id", id);
+	const { error } =
+		id === "all" && cityHall?.length
+			? await supabase.from("schools").delete().eq("cityhall_id", cityHall)
+			: await supabase.from("schools").delete().eq("id", id);
 
 	if (error) {
 		return {
