@@ -117,6 +117,8 @@ export async function deleteSchool(id: string, cityHall?: string) {
 			? await supabase.from("schools").delete().eq("cityhall_id", cityHall)
 			: await supabase.from("schools").delete().eq("id", id);
 
+	console.log(error, cityHall, id)
+
 	if (error) {
 		return {
 			error: {

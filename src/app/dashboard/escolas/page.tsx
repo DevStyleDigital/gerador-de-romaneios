@@ -2,7 +2,6 @@ import { Pagination } from "@/components/pagination";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DialogTrigger } from "@/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -85,7 +84,9 @@ export default async function Page({
 					<SearchContainer cityHalls={cityHalls} />
 					{!!searchParams.prefeitura?.length && (
 						<DeleteSchool id="all" cityHall={searchParams.prefeitura}>
-							<Button variant="destructive">Deletar Escolas</Button>
+							<AlertDialogTrigger asChild>
+								<Button variant="destructive">Deletar Escolas</Button>
+							</AlertDialogTrigger>
 						</DeleteSchool>
 					)}
 				</div>
