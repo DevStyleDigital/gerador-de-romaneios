@@ -221,10 +221,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 								{school && (
 									<Card className="border-destructive">
 										<CardHeader>
-											<CardTitle>Excluir Prefeitura</CardTitle>
+											<CardTitle>Excluir Escola</CardTitle>
 											<CardDescription>
-												Ao excluir uma prefeitura você exclui todas as escolas
-												cadastradas nela.
+												Essa ação deletará permanentemente essa escola de nosso
+												sistema.
 											</CardDescription>
 										</CardHeader>
 										<CardContent>
