@@ -8,11 +8,16 @@ import { MaxWeight } from "./max-weight";
 import { RouteWeight } from "./route-weight";
 import { TableSelect } from "./table";
 
-export const HandleRoute = () => {
+export const HandleRoute = ({
+	currentRoute,
+	setCurrentRoute,
+}: {
+	currentRoute: string;
+	setCurrentRoute: (value: string) => void;
+}) => {
 	const { requests, routes, setRoutes } = useRequests();
 
 	const [maxWeight, setMaxWeight] = React.useState(1700);
-	const [currentRoute, setCurrentRoute] = React.useState("0");
 	const requestsErrorValidatorInputRef = React.useRef<HTMLInputElement>(null);
 
 	React.useEffect(() => {

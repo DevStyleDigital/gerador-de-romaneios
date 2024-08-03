@@ -1,6 +1,7 @@
 import type { RequestTypeDetailed } from "@/types/request";
 import {
 	Document,
+	Font,
 	Image,
 	Page,
 	StyleSheet,
@@ -188,6 +189,7 @@ export const HtmlRequestTemplate = ({
 				(item.type !== "tag" && item.content) ||
 				(item.type === "tag" && item?.attrs?.id?.includes(id))
 			) {
+				if (!item.content) continue;
 				for (const content of item.content) {
 					if (content.text?.length) text.push(<Text>{content.text}</Text>);
 				}
@@ -228,7 +230,8 @@ export const HtmlRequestTemplate = ({
 						},
 					]}
 				>
-					ROTA {request.route.toString().padStart(2, "0")} - {request.totalWeight.toFixed(2)} Kg
+					ROTA {request.route.toString().padStart(2, "0")} -{" "}
+					{request.totalWeight.toFixed(2)} Kg
 				</Text>
 				<Text
 					style={[
@@ -266,7 +269,7 @@ export const HtmlRequestTemplate = ({
 				</View>
 				<View style={styles.entityInfoContainer}>
 					<View style={styles.entityInfo}>
-						<Text style={styles.entityInfoTitle}>Fornecedor:</Text>
+						<Text style={styles.entityInfoTitle}>Fornecedora:</Text>
 						<Text>{request.cooperative.name}</Text>
 					</View>
 					<View style={styles.entityInfoFlex}>
@@ -349,11 +352,113 @@ export const HtmlRequestTemplate = ({
 export const PDFRequests = ({
 	requests,
 }: { requests: RequestTypeDetailed[] }) => {
+	const requestsByRoutes = requests.reduce((acc, request) => {
+		const routeIndex = acc.findIndex(
+			(requestsByRoute) => requestsByRoute[0].route === request.route,
+		);
+		if (routeIndex === -1) acc.push([request]);
+		else acc[routeIndex].push(request);
+		return acc;
+	}, [] as RequestTypeDetailed[][]);
+
 	return (
 		<Document>
 			{requests.map((request, i) => (
 				<HtmlRequestTemplate key={i.toString()} request={request} />
 			))}
+			{/* {requestsByRoutes.map((requestsByRoute) => (
+				<Page key={requestsByRoute[0].route} size="A4" style={styles.page}>
+					<View
+						style={{
+							fontSize: 14,
+							borderBottom: "1px solid #000",
+							marginBottom: "8px",
+							paddingBottom: "8px",
+						}}
+					>
+						<Text
+							style={{
+								fontSize: 18,
+								textAlign: "center",
+								marginBottom: "8px",
+							}}
+						>
+							Relatório de Entrega
+						</Text>
+						<Text style={{ fontSize: "12px" }}>
+							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
+								PREFEITURA:
+							</Text>{" "}
+							{requestsByRoute[0].cityHall.name}
+						</Text>
+						<Text style={{ fontSize: "12px" }}>
+							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
+								FORNECEDORA:
+							</Text>{" "}
+							{requestsByRoute[0].cooperative.name}
+						</Text>
+						<Text style={{ fontSize: "12px" }}>
+							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
+								ROTA:
+							</Text>{" "}
+							{requestsByRoute[0].route.toString().padStart(2, "0")}
+						</Text>
+					</View>
+
+					{requestsByRoute.map((request, i) => (
+						<View
+							key={i.toString()}
+							style={{
+								marginBottom: "8px",
+								padding: "8px",
+								border: "1px solid #000",
+							}}
+						>
+							<View
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									marginBottom: "8px",
+								}}
+							>
+								<Text style={{ fontWeight: "bold" }}>
+									- Nº {request.school.number}
+								</Text>
+								<Text style={{ fontWeight: "bold" }}>
+									- {request.school.name}
+								</Text>
+								<Text style={{ fontWeight: "bold" }}>
+									- Peso Total: {request.totalWeight.toFixed(2)} Kg
+								</Text>
+							</View>
+							<View
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "space-between",
+									marginBottom: "8px",
+								}}
+							>
+								<Text>Data: ______/______/2024 </Text>
+								<Text> - CPF: ___________________________</Text>
+								<Text> - Assinatura: ____________________________</Text>
+							</View>
+							<View
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "space-between",
+								}}
+							>
+								<Text>
+									Ocorrências:
+									____________________________________________________________________________________
+								</Text>
+							</View>
+						</View>
+					))}
+				</Page>
+			))} */}
 		</Document>
 	);
 };

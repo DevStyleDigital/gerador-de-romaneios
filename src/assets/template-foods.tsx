@@ -1,5 +1,5 @@
 import type { RequestType } from "@/types/request";
-import { Document, Page, Text, View, type Styles } from "@react-pdf/renderer";
+import { Document, Page, type Styles, Text, View } from "@react-pdf/renderer";
 
 const styles = {
 	page: {
@@ -71,7 +71,8 @@ export const PDFFoods = ({
 				return (
 					<Page key={index.toString()} size="A4" style={styles.page}>
 						<Text style={{ fontSize: "18px", marginBottom: "8px" }}>
-							Rota: {(index + 1).toString().padStart(2, "0")} - {foods.schools[0].cityHall}
+							Rota: {(index + 1).toString().padStart(2, "0")} -{" "}
+							{foods.schools[0].cityHall}
 						</Text>
 						{foods.foods.map((food, i) => {
 							const weight = (food.quantity || 1) * (food.weight || 1);
