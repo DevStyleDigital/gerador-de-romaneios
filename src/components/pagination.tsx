@@ -162,6 +162,41 @@ export const Pagination = ({
 						</Tooltip>
 					</TooltipProvider>
 				</PaginationItem>
+				{/* Add intermediate pages here */}
+				{Array.from({ length: lastPage + 1 }, (_, index) => {
+					if (index === page - 2 || index === page + 2 || page === index) {
+						return (
+							<PaginationItem key={index.toString()}>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipContent>Go to page {index + 1}</TooltipContent>
+										<TooltipTrigger asChild>
+											<Button
+												asChild
+												disabled={page === index}
+												aria-label={`Go to page ${index + 1}`}
+												variant="ghost"
+												size="icon"
+												className="text-center"
+											>
+												<Link
+													href={{
+														query: `page=${index}&per_page=${perPage}${searchQuery}`,
+													}}
+												>
+													<span className="size-4">{index + 1}</span>
+												</Link>
+											</Button>
+										</TooltipTrigger>
+									</Tooltip>
+								</TooltipProvider>
+							</PaginationItem>
+						);
+					}
+
+					return null;
+				})}
+				{/* End of intermediate pages */}
 				<PaginationItem>
 					<TooltipProvider>
 						<Tooltip>

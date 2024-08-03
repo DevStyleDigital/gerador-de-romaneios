@@ -26,6 +26,12 @@ export const HandleCooperative = ({
 	lastTag?: number;
 }) => {
 	const [open, setOpen] = React.useState(false);
+	const [isCPF, setIsCPF] = React.useState(false);
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = event.target.value;
+		setIsCPF(inputValue.length === 11);
+	};
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -59,19 +65,21 @@ export const HandleCooperative = ({
 								form={null}
 								emblem={cooperative?.emblem}
 								className="h-44 w-full !aspect-auto p-2"
+								required={false}
 							/>
 						</div>
 						<div className="grid gap-1">
-							<Label htmlFor="cnpj">CNPJ*</Label>
+							<Label htmlFor="cnpj">CPF/CNPJ*</Label>
 							<MaskedInput
 								id="cnpj"
 								name="cnpj"
 								required
 								className="w-full"
-								mask="\dr}\dr}.'\dr}\dr}\dr}.'\dr}\dr}\dr}/'\dr}\dr}\dr}\dr}-'\dr}\dr}"
-								pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"
-								placeholder="00.000.000/0000-00"
+								mask={isCPF ? "999.999.999-99" : "99.999.999/9999-99"}
+								pattern={isCPF ? "\d{3}\.\d{3}\.\d{3}-\d{2}" : "\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"}
+								placeholder={isCPF ? "000.000.000-00" : "00.000.000/0000-00"}
 								defaultValue={cooperative?.cnpj}
+								onChange={handleInputChange}
 							/>
 						</div>
 						<div className="grid gap-1">

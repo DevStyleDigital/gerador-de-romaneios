@@ -33,7 +33,9 @@ export const EmblemUpload = ({
 	emblem,
 	className,
 	form = "upsert",
+	required = true,
 }: {
+	required?: boolean;
 	emblem?: string;
 	className?: string;
 	form?: "upsert" | null;
@@ -97,7 +99,7 @@ export const EmblemUpload = ({
 				accept="image/*"
 				className="sr-only"
 				onFocus={() => document.getElementById("upload-input")?.focus()}
-				required={files.length === 0}
+				required={required === false ? required : files.length === 0}
 				onChange={(ev) => {
 					const file = ev.target.files?.item(0);
 					file && handleUpload([file], 0, uploadOptions);
