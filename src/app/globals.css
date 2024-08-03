@@ -71,8 +71,9 @@
   pointer-events: none;
 }
 .rich-text-content {
-  border: 1px hsl(var(--muted)) dashed;
+  border: 2px hsl(var(--muted)) dashed;
   padding: 8px 4px;
   margin-top: 4px;
   word-break: break-all;
+  @apply bg-accent/40 rounded;
 }

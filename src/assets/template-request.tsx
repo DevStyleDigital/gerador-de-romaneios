@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 const Signature = ({ texts }: { texts: JSX.Element[] }) => (
 	<View style={styles.signatureContainer}>
 		<View
-			style={{ marginBottom: "12px", display: "flex", flexDirection: "row" }}
+			style={{ marginBottom: "10px", display: "flex", flexDirection: "row" }}
 		>
 			<Text style={{ width: "100%" }}>
 				Data do Recebimento: ______/______/2024
@@ -133,7 +133,7 @@ const Signature = ({ texts }: { texts: JSX.Element[] }) => (
 				style={{
 					width: "100%",
 					textTransform: "uppercase",
-					fontSize: "14px",
+					fontSize: "16px",
 					fontWeight: "bold",
 					backgroundColor: "#f1f1f1",
 					padding: "0 4px",
