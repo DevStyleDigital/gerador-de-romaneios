@@ -128,6 +128,7 @@ export const Pagination = ({
 										href={{
 											query: `page=0&per_page=${perPage}${searchQuery}`,
 										}}
+										scroll={false}
 									>
 										<ChevronsLeftIcon className="size-4" aria-hidden="true" />
 									</Link>
@@ -154,6 +155,7 @@ export const Pagination = ({
 												page - 1
 											}&per_page=${perPage}${searchQuery}`,
 										}}
+										scroll={false}
 									>
 										<ChevronLeftIcon className="size-4" aria-hidden="true" />
 									</Link>
@@ -164,7 +166,7 @@ export const Pagination = ({
 				</PaginationItem>
 				{/* Add intermediate pages here */}
 				{Array.from({ length: lastPage + 1 }, (_, index) => {
-					if (index === page - 2 || index === page + 2 || page === index) {
+					if (index >= page - 3 && index <= page + 3) {
 						return (
 							<PaginationItem key={index.toString()}>
 								<TooltipProvider>
@@ -183,6 +185,7 @@ export const Pagination = ({
 													href={{
 														query: `page=${index}&per_page=${perPage}${searchQuery}`,
 													}}
+													scroll={false}
 												>
 													<span className="size-4">{index + 1}</span>
 												</Link>
@@ -215,6 +218,7 @@ export const Pagination = ({
 												page + 1
 											}&per_page=${perPage}${searchQuery}`,
 										}}
+										scroll={false}
 									>
 										<ChevronRightIcon className="size-4" aria-hidden="true" />
 									</Link>
@@ -239,6 +243,7 @@ export const Pagination = ({
 										href={{
 											query: `page=${lastPage}&per_page=${perPage}${searchQuery}`,
 										}}
+										scroll={false}
 									>
 										<ChevronsRightIcon className="size-4" aria-hidden="true" />
 									</Link>

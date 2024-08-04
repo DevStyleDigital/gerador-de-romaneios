@@ -18,8 +18,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				ref={ref}
 				{...props}
 				onChange={(ev) => {
-					props.onChange?.(ev);
 					ev.target.removeAttribute("data-error");
+					props.onChange?.(ev);
 				}}
 			/>
 		);
@@ -29,8 +29,8 @@ Input.displayName = "Input";
 
 const MaskedInput = React.forwardRef<
 	HTMLInputElement,
-	InputProps & { mask: (string | RegExp)[] | string }
->(({ mask, ...props }, ref) => {
+	InputProps & { mask: (string | RegExp)[] | string; showMask?: boolean }
+>(({ mask, onChange, showMask = true, ...props }, ref) => {
 	return (
 		<InputMask
 			mask={
@@ -46,11 +46,16 @@ const MaskedInput = React.forwardRef<
 							)
 					: mask
 			}
+			guide={showMask}
 			{...props}
 			render={(ref, inputProps) => (
 				<Input
 					ref={ref as (inputElement: HTMLInputElement) => void}
 					{...inputProps}
+					onChange={(ev) => {
+						inputProps.onChange(ev);
+						onChange?.(ev);
+					}}
 				/>
 			)}
 		/>

@@ -26,11 +26,12 @@ export const HandleCooperative = ({
 	lastTag?: number;
 }) => {
 	const [open, setOpen] = React.useState(false);
-	const [isCPF, setIsCPF] = React.useState(false);
+	const [isCPF, setIsCPF] = React.useState(true);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const inputValue = event.target.value;
-		setIsCPF(inputValue.length === 11);
+		const inputValue = event.target.value.replaceAll(/\D/g, '');
+		if (inputValue.length <= 11) setIsCPF(true);
+		else setIsCPF(false);
 	};
 
 	return (
@@ -74,9 +75,10 @@ export const HandleCooperative = ({
 								id="cnpj"
 								name="cnpj"
 								required
+								showMask={false}
 								className="w-full"
-								mask={isCPF ? "999.999.999-99" : "99.999.999/9999-99"}
-								pattern={isCPF ? "\d{3}\.\d{3}\.\d{3}-\d{2}" : "\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"}
+								mask={isCPF ? "\\dr}\\dr}\\dr}.'\\dr}\\dr}\\dr}.'\\dr}\\dr}\\dr}-'\\dr}\\dr}\\dr}" : "\\dr}\\dr}.'\\dr}\\dr}\\dr}.'\\dr}\\dr}\\dr}/'\\dr}\\dr}\\dr}\\dr}-'\\dr}\\dr}"}
+								pattern={isCPF ? "\\d{3}\.\\d{3}\.\\d{3}-\\d{2}" : "\\d{2}\.\\d{3}\.\\d{3}/\\d{4}-\\d{2}"}
 								placeholder={isCPF ? "000.000.000-00" : "00.000.000/0000-00"}
 								defaultValue={cooperative?.cnpj}
 								onChange={handleInputChange}
