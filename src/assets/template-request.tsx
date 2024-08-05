@@ -366,7 +366,7 @@ export const PDFRequests = ({
 			{requests.map((request, i) => (
 				<HtmlRequestTemplate key={i.toString()} request={request} />
 			))}
-			{/* {requestsByRoutes.map((requestsByRoute) => (
+			{requestsByRoutes.map((requestsByRoute) => (
 				<Page key={requestsByRoute[0].route} size="A4" style={styles.page}>
 					<View
 						style={{
@@ -458,7 +458,7 @@ export const PDFRequests = ({
 						</View>
 					))}
 				</Page>
-			))} */}
+			))}
 		</Document>
 	);
 };
