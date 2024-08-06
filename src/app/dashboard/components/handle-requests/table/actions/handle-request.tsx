@@ -184,6 +184,11 @@ export const HandleRequest = () => {
 							date: date!.toLocaleDateString("pt-BR", { dateStyle: "long" }),
 							school,
 							totalWeight: request.totalWeight,
+							totalWeightRequest: foods.reduce(
+								(acc, { weight, quantity }) =>
+									acc + (weight || 1) * (quantity || 1),
+								0,
+							),
 							route:
 								routes.findIndex(({ requestIds }) =>
 									requestIds.has(request.id),

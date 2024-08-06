@@ -231,7 +231,7 @@ export const HtmlRequestTemplate = ({
 					]}
 				>
 					ROTA {request.route.toString().padStart(2, "0")} -{" "}
-					{request.totalWeight.toFixed(2)} Kg
+					{request.totalWeightRequest.toFixed(2)} Kg
 				</Text>
 				<Text
 					style={[
@@ -442,9 +442,22 @@ export const PDFRequests = ({
 									- {request.school.name}
 								</Text>
 								<Text style={{ fontWeight: "bold" }}>
-									- Peso Total: {request.totalWeight.toFixed(2)} Kg
+									- Peso Total: {request.totalWeightRequest.toFixed(2)} Kg
 								</Text>
 							</View>
+							<Text style={{ marginBottom: "8px" }}>
+								{request.foods.map((food, i) => (
+									<Text key={food.id}>
+										{food.name} - {food.quantity?.toFixed(1)}{" "}
+										{food.type === "ud"
+											? "Unidade"
+											: food.type === "mc"
+												? "Maço"
+												: "Quilograma"}
+										{i !== request.foods.length - 1 ? "; " : ""}
+									</Text>
+								))}
+							</Text>
 							<View
 								style={{
 									display: "flex",
