@@ -208,7 +208,7 @@ export const HtmlRequestTemplate = ({
 						<Image src={request.cooperative.emblem} style={styles.image} />
 					</View>
 					<View style={styles.school}>
-						<Text>Data de Entrega: {request.date}</Text>
+						<Text style={{ fontSize: 16 }}>Data de Entrega: {request.date}</Text>
 						<View style={[{ fontSize: 18 }, styles.entityInfoTitle]}>
 							<Text>
 								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ""}
@@ -312,10 +312,10 @@ export const HtmlRequestTemplate = ({
 							<Text style={styles.col2}> </Text>
 							<Text style={styles.col3}>
 								{food.type === "ud"
-									? "Unidade"
+									? "UND"
 									: food.type === "mc"
-										? "Maço"
-										: "Quilograma"}
+										? "MÇ"
+										: "KG"}
 							</Text>
 							<Text
 								style={[
@@ -395,9 +395,7 @@ export const PDFRequests = ({
 							}}
 						>
 							Relatório de Entrega{" "}
-							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
-								______/______/2024
-							</Text>
+							<Text style={{ fontSize: 16 }}>Data de Entrega: {requestsByRoute[0].date}</Text>
 						</Text>
 						<Text style={{ fontSize: "12px" }}>
 							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
@@ -450,11 +448,11 @@ export const PDFRequests = ({
 									<Text key={food.id}>
 										{food.name} - {food.quantity?.toFixed(1)}{" "}
 										{food.type === "ud"
-											? "Unidade"
+											? "UND"
 											: food.type === "mc"
-												? "Maço"
-												: "Quilograma"}
-										{i !== request.foods.length - 1 ? "; " : ""}
+												? "MÇ"
+												: "KG"}
+										{i !== request.foods.length - 1 ? " / " : ""}
 									</Text>
 								))}
 							</Text>
@@ -484,6 +482,13 @@ export const PDFRequests = ({
 							</View>
 						</View>
 					))}
+					<Text
+						style={{ position: "absolute", bottom: "4px", right: 24 }}
+						render={({ pageNumber, totalPages }) =>
+							`pg. ${pageNumber} / ${totalPages}`
+						}
+						fixed
+					/>
 				</Page>
 			))}
 		</Document>

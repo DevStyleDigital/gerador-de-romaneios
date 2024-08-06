@@ -159,6 +159,8 @@ export const HandleRequest = () => {
 								});
 							}
 						}
+						const city = cityHalls.find(({ id }) => request.cityHallId === id);
+						const cityHallFoods = city?.foods;
 
 						requestsByCooperative.push({
 							foods,
@@ -185,8 +187,16 @@ export const HandleRequest = () => {
 							school,
 							totalWeight: request.totalWeight,
 							totalWeightRequest: foods.reduce(
-								(acc, { weight, quantity }) =>
-									acc + (weight || 1) * (quantity || 1),
+								(acc, food) => {
+									const useWeight =
+										cityHallFoods?.find(
+											({ id }) =>
+												food.cityHallFoodId === `${id}?${request.cityHallId}`,
+										)?.weight ||
+										food.weight ||
+										1;
+									return acc + Number(useWeight) * (food.quantity || 1);
+								},
 								0,
 							),
 							route:
