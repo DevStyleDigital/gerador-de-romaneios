@@ -376,6 +376,17 @@ export const PDFRequests = ({
 							paddingBottom: "8px",
 						}}
 					>
+						<Image
+							src={requestsByRoute[0].cooperative.emblem}
+							style={{
+								width: "40px",
+								height: "40px",
+								aspectRatio: "1/1",
+								position: "absolute",
+								top: "0",
+								right: "0",
+							}}
+						/>
 						<Text
 							style={{
 								fontSize: 18,
@@ -383,7 +394,10 @@ export const PDFRequests = ({
 								marginBottom: "8px",
 							}}
 						>
-							Relatório de Entrega
+							Relatório de Entrega{" "}
+							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
+								______/______/2024
+							</Text>
 						</Text>
 						<Text style={{ fontSize: "12px" }}>
 							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
