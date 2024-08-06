@@ -208,7 +208,7 @@ export const HtmlRequestTemplate = ({
 						<Image src={request.cooperative.emblem} style={styles.image} />
 					</View>
 					<View style={styles.school}>
-						<Text style={{ fontSize: 16 }}>Data de Entrega: {request.date}</Text>
+						<Text style={{ fontSize: 12 }}>Data de Entrega: {request.date}</Text>
 						<View style={[{ fontSize: 18 }, styles.entityInfoTitle]}>
 							<Text>
 								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ""}
@@ -395,7 +395,7 @@ export const PDFRequests = ({
 							}}
 						>
 							Relatório de Entrega{" "}
-							<Text style={{ fontSize: 16 }}>Data de Entrega: {requestsByRoute[0].date}</Text>
+							<Text style={{ fontSize: 12 }}>Data de Entrega: {requestsByRoute[0].date}</Text>
 						</Text>
 						<Text style={{ fontSize: "12px" }}>
 							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
