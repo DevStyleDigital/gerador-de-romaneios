@@ -77,7 +77,9 @@ export const PDFFoods = ({
 						{foods.foods.map((food, i) => {
 							const weight = (food.quantity || 1) * (food.weight || 1);
 							total += weight;
-							const existingFood = foodsTotals.find((f) => f.id === food.id);
+							const existingFood = foodsTotals.find(
+								(f) => f.cityHallFoodId === food.cityHallFoodId && f.name === food.name,
+							);
 							if (
 								existingFood &&
 								existingFood.type === food.type &&
