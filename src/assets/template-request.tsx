@@ -91,12 +91,9 @@ const styles = StyleSheet.create({
 		aspectRatio: "1/1",
 	},
 	signatureContainer: {
-		position: "absolute",
-		bottom: 24,
-		left: 24,
-		right: 24,
 		border: "1px solid #000",
 		padding: 8,
+		marginTop: "auto",
 	},
 	signatureRow: {
 		display: "flex",
@@ -122,7 +119,7 @@ const styles = StyleSheet.create({
 });
 
 const Signature = ({ texts }: { texts: JSX.Element[] }) => (
-	<View style={styles.signatureContainer}>
+	<View style={styles.signatureContainer} wrap={false}>
 		<View
 			style={{ marginBottom: "10px", display: "flex", flexDirection: "row" }}
 		>
@@ -165,20 +162,6 @@ export const HtmlRequestTemplate = ({
 	const [firstWord, secondWord, ...restName] = request.school.name
 		.toLowerCase()
 		.split(" ");
-
-	function checkLastPage() {
-		const firstPageItems = 18;
-		const itemsPerPage = 30;
-		const totalItems = request.foods.length;
-		if (totalItems <= firstPageItems) {
-			return totalItems <= 12;
-		}
-		const remainingItems = totalItems - firstPageItems;
-		const itemsOnLastPage = remainingItems % itemsPerPage;
-		const adjustedItemsOnLastPage =
-			itemsOnLastPage === 0 ? itemsPerPage : itemsOnLastPage;
-		return adjustedItemsOnLastPage === itemsPerPage - 12;
-	}
 
 	function getTextBetweenTags(doc: any, id: string) {
 		const text = [];
@@ -329,9 +312,6 @@ export const HtmlRequestTemplate = ({
 					);
 				})}
 			</View>
-			{!checkLastPage() && (
-				<View style={{ height: "330px", display: "flex" }} />
-			)}
 			<Signature
 				texts={getTextBetweenTags(
 					request.school.comments,
@@ -375,21 +355,22 @@ export const PDFRequests = ({
 							marginBottom: "8px",
 							paddingBottom: "8px",
 						}}
+						fixed
 					>
 						<Image
 							src={requestsByRoute[0].cooperative.emblem}
 							style={{
-								width: "40px",
-								height: "40px",
+								width: "55px",
+								height: "55px",
 								aspectRatio: "1/1",
 								position: "absolute",
-								top: "0",
-								right: "0",
+								top: "-10px",
+								right: "-10px",
 							}}
 						/>
 						<Text
 							style={{
-								fontSize: 18,
+								fontSize: 16,
 								textAlign: "center",
 								marginBottom: "8px",
 							}}
@@ -420,6 +401,7 @@ export const PDFRequests = ({
 					{requestsByRoute.map((request, i) => (
 						<View
 							key={i.toString()}
+							wrap={false}
 							style={{
 								marginBottom: "8px",
 								padding: "8px",

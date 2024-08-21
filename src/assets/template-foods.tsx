@@ -78,7 +78,9 @@ export const PDFFoods = ({
 							const weight = (food.quantity || 1) * (food.weight || 1);
 							total += weight;
 							const existingFood = foodsTotals.find(
-								(f) => f.cityHallFoodId === food.cityHallFoodId && f.name === food.name,
+								(f) =>
+									f.cityHallFoodId === food.cityHallFoodId &&
+									f.name === food.name,
 							);
 							if (
 								existingFood &&
@@ -128,7 +130,9 @@ export const PDFFoods = ({
 			})}
 
 			<Page size="A4" style={styles.page}>
-				<Text style={{ fontSize: "18px" }}>Rota: TOTAL</Text>
+				<Text style={{ fontSize: "18px" }}>
+					Rota: TOTAL {foodsByRoute[0].schools[0].cityHall}
+				</Text>
 				{foodsTotals.map((food, i) => {
 					const weight = (food.quantity || 1) * (food.weight || 1);
 					foodsTotalsTotal += weight;
