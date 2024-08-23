@@ -155,6 +155,8 @@ export const Foods = ({
 								<div className="flex w-[260px] flex-col gap-2">
 									<Input
 										type="number"
+										min={0.01}
+										step={0.01}
 										name="quantity"
 										id="quantity"
 										required
@@ -194,6 +196,8 @@ export const Foods = ({
 									<Label htmlFor="price">R$:</Label>
 									<Input
 										type="number"
+										min={0.01}
+										step={0.01}
 										name="price"
 										id="price"
 										required
@@ -219,6 +223,8 @@ export const Foods = ({
 									<Label htmlFor="weight">KG:</Label>
 									<Input
 										type="number"
+										min={0.01}
+										step={0.01}
 										name="weight"
 										id="weight"
 										required
