@@ -191,7 +191,9 @@ export const HtmlRequestTemplate = ({
 						<Image src={request.cooperative.emblem} style={styles.image} />
 					</View>
 					<View style={styles.school}>
-						<Text style={{ fontSize: 12 }}>Data de Entrega: {request.date}</Text>
+						<Text style={{ fontSize: 12 }}>
+							Data de Entrega: {request.date}
+						</Text>
 						<View style={[{ fontSize: 18 }, styles.entityInfoTitle]}>
 							<Text>
 								{firstWord.toUpperCase()} {secondWord?.toUpperCase() || ""}
@@ -213,7 +215,8 @@ export const HtmlRequestTemplate = ({
 						},
 					]}
 				>
-					ROTA {request.route.toString().padStart(2, "0")} -{" "}
+					ROTA {request.route.toString().padStart(2, "0")}{" "}
+					{request.isReplacement ? "(REPOSIÇÃO)" : ""} -{" "}
 					{request.totalWeightRequest.toFixed(2)} Kg
 				</Text>
 				<Text
@@ -294,11 +297,7 @@ export const HtmlRequestTemplate = ({
 							</Text>
 							<Text style={styles.col2}> </Text>
 							<Text style={styles.col3}>
-								{food.type === "ud"
-									? "UND"
-									: food.type === "mc"
-										? "MÇ"
-										: "KG"}
+								{food.type === "ud" ? "UND" : food.type === "mc" ? "MÇ" : "KG"}
 							</Text>
 							<Text
 								style={[
@@ -372,13 +371,21 @@ export const PDFRequests = ({
 							style={{
 								fontSize: 16,
 								textAlign: "center",
-								marginBottom: "8px",
 							}}
 						>
 							Relatório de Entrega{" "}
-							<Text style={{ fontSize: 12 }}>Data de Entrega: {requestsByRoute[0].date}</Text>
+							{requestsByRoute[0].isReplacement ? "(REPOSIÇÃO)" : ""}{" "}
 						</Text>
-						<Text style={{ fontSize: "12px" }}>
+						<Text style={{ fontSize: 12 }}>
+							Data de Entrega: {requestsByRoute[0].date}
+						</Text>
+						<Text
+							style={{
+								fontSize: "12px",
+								textAlign: "center",
+								marginBottom: "8px",
+							}}
+						>
 							<Text style={{ fontWeight: "bold", fontSize: "14px" }}>
 								PREFEITURA:
 							</Text>{" "}

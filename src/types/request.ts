@@ -15,6 +15,7 @@ type RequestFood = {
 
 export type RequestType = {
 	id: string;
+	isReplacement?: boolean;
 	school: {
 		id: string;
 		default_csv_name: string;
@@ -36,6 +37,7 @@ export type RequestTypeDetailed = {
 	school: School;
 	totalWeight: number;
 	totalWeightRequest: number;
+	isReplacement: boolean;
 	cityHall: {
 		emblem: string;
 		name: string;

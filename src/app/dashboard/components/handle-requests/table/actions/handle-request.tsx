@@ -164,6 +164,7 @@ export const HandleRequest = () => {
 
 						requestsByCooperative.push({
 							foods,
+							isReplacement: !!request.isReplacement,
 							cooperative: {
 								id: cooperative.id.toString(),
 								emblem: supabase.storage

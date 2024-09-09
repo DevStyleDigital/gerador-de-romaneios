@@ -254,6 +254,18 @@ const Form = ({
 						</Button>
 					)}
 				</div>
+				<div className="flex gap-4 mt-4 items-end">
+					<Label className="flex items-center gap-2">
+						<input type="checkbox" onChange={(ev) =>  {
+							setCurrentRequest((prevRequest) => {
+								const newRequest = { ...prevRequest }; // Clone the current state
+								newRequest.isReplacement = ev.target.checked;
+								return newRequest;
+							});
+						}} />
+						<span>Romaneio de Reposição</span>
+					</Label>
+				</div>
 				<Foods request={currentRequest} setCurrentRequest={setCurrentRequest} />
 			</div>
 			<Separator className="mb-8" />
